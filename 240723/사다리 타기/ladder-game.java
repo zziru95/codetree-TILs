@@ -55,24 +55,22 @@ public class Main {
             int nc = edge.col;
             int nr = edge.row;
             ladder[nr][nc] = 1;
-            ladder[nr][nc+1] = 1;
+            ladder[nr][nc+1] = 2;
         }
 
         for (int i=1; i<=n ; i++){
-            int nr = 1;
+            int nr = 0;
             int nc = i;
 
             while (nr < 17){
                 if (ladder[nr][nc] == 0){
                     nr++;
-                } else {
-                    if(ladder[nr][nc+1] == 1) {
-                        nr++;
-                        nc++;
-                    } else {
-                        nr++;
-                        nc--;
-                    }
+                } else if (ladder[nr][nc] == 1){
+                    nr++;
+                    nc++;
+                } else if (ladder[nr][nc] == 2) {
+                    nr++;
+                    nc--;
                 }
             }
             gameResult[i-1] = nc;
