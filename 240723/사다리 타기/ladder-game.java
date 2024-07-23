@@ -28,7 +28,7 @@ public class Main {
             ladder[i][n+1] = -1;
         }
 
-        int answer = Integer.MAX_VALUE;
+        int answer = m;
 
         int[] result = play(ladder, edges, n);
 
