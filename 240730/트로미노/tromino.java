@@ -29,13 +29,21 @@ public class Main {
         int maxValue = 0;
         for(int i=0; i<n-2; i++) {
             for(int j=0; j<m-2; j++) {
-                int temp1 = 0;
-                int temp2 = 0 ;
-                for(int k=0; k<3; k++) {
-                    temp1 += graph[i][j+k];
-                    temp2 += graph[i+k][j];
+                if (i <= n - 3) { // 수직 합 계산
+                    int temp1 = 0;
+                    for (int k = 0; k < 3; k++) {
+                        temp1 += graph[i + k][j];
+                    }
+                    maxValue = Math.max(maxValue, temp1);
                 }
-                maxValue = Math.max(maxValue, Math.max(temp1,temp2));
+                if (j <= m - 3) { // 수평 합 계산
+                    int temp2 = 0;
+                    for (int k = 0; k < 3; k++) {
+                        temp2 += graph[i][j + k];
+                    }
+                    maxValue = Math.max(maxValue, temp2);
+                }
+
             }
         }
         return maxValue;
