@@ -33,7 +33,7 @@ public class Main {
                         }
                 if(temp >= m) check1 = true;
 
-                if(graph[j][i] == graph[j+1][i+1]) {temp2++;}
+                if(graph[j][i] == graph[j+1][i]) {temp2++;}
                 else {temp2=1;}
                 if(temp2 >= m ) check2 = true;
 
