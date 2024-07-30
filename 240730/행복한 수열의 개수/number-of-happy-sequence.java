@@ -44,7 +44,7 @@ public class Main {
             if(check1) answer++; // 세로 방향이 일치하면 결과 증가
             if(check2) answer++; // 가로 방향이 일치하면 결과 증가
         }
-        if(n==1) answer =1;
+        if(n==1) answer =2;
         System.out.println(answer);
     }
 }
