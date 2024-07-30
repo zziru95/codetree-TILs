@@ -27,8 +27,8 @@ public class Main {
 
     public static int check1(int[][] graph, int n, int m) {
         int maxValue = 0;
-        for(int i=0; i<n-1; i++) {
-            for(int j=0; j<m-1; j++) {
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
                 if (i <= n - 3) { // 수직 합 계산
                     int temp1 = 0;
                     for (int k = 0; k < 3; k++) {
