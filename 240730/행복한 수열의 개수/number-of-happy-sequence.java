@@ -17,34 +17,58 @@ public class Main {
                 graph[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+        answer += checkRow(graph,n,m);
+        answer += checkCol(graph,n,m);
 
+        System.out.println(answer);
+        
+    }
 
-        for(int i=0; i<=n-m; i++) {
-            boolean check1 = false;
-            boolean check2 = false;
-            int j=0;
+    public static int checkRow(int[][] graph, int n, int m) {
+        if (n==1) return 1;
+        if (m==1) return n;
+        int cnt = 0;
+        for(int i=0; i<n;i++) {
+            boolean check = false;
             int temp = 1;
-            int temp2 = 1;
-            while(j<n-1) {
+            for(int j=0; j<n-1; j++) {
+                if(check) break;
+
+                if(graph[j][i] == graph[j+1][i]) {
+                    temp++;
+                    if(temp == m) check = true;
+                } else {
+                    temp = 1;
+                }
+
+            }
+            if (check) cnt++;
+        }
+
+        return cnt;
+    }
+
+    public static int checkCol(int[][] graph, int n, int m) {
+        if (n==1) return 1;
+        if (m==1) return n;
+        int cnt = 0;
+        for(int i=0; i<n;i++) {
+            boolean check = false;
+            int temp = 1;
+            for(int j=0; j<n-1; j++) {
+                if(check) break;
+
                 if(graph[i][j] == graph[i][j+1]) {
                     temp++;
-                    } else {
-                        temp = 1;
-                        }
-                if(temp >= m) check1 = true;
+                    if(temp == m) check = true;
+                } else {
+                    temp = 1;
+                }
 
-                if(graph[j][i] == graph[j+1][i]) {temp2++;}
-                else {temp2=1;}
-                if(temp2 >= m ) check2 = true;
-
-                j++;
-        
             }
-
-            if(check1) answer++; // 세로 방향이 일치하면 결과 증가
-            if(check2) answer++; // 가로 방향이 일치하면 결과 증가
+            if (check) cnt++;
         }
-        if(n==1) answer =2;
-        System.out.println(answer);
+
+        return cnt;
     }
 }
