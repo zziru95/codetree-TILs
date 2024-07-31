@@ -1,91 +1,54 @@
-import java.util.*;
-import java.io.*;
+import java.util.Scanner;
 
 public class Main {
-    static int[][] direction= {{1,0},{-1,0},{0,1},{0,-1}};
-    static int[] rewards = new int[2];
-    public static void main(String[] args) throws IOException {
-        // 여기에 코드를 작성해주세요.
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int[][] grid = new int[n][n];
 
-        int[][] graph = new int[n][n];
-        for(int i=0; i<n; i++) {
-            st = new StringTokenizer(br.readLine());
-            for(int j=0; j<n; j++) {
-                graph[i][j] = Integer.parseInt(st.nextToken());
+        // 입력 받기
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                grid[i][j] = sc.nextInt();
             }
         }
 
-        for(int i=0; i<n; i++) {
-            for(int j=0; j<n; j++) {
-                boolean[][] visited = new boolean[n][n];
-                bfs(graph,n,m,i,j, visited);
-            }
-        }
+        int maxGold = 0;
 
-        System.out.println(rewards[0]+1);
+        // K를 0부터 n-1까지 순회
+        for (int k = 0; k < n; k++) {
+            int cost = k * k + (k + 1) * (k + 1);
 
-    }
-
-    public static void bfs(int[][] graph, int n, int m, int row, int col, boolean[][] visited) {
-        int qCnt = 1;
-        int goldCnt = (graph[row][col] == 1) ? 1 : 0;
-        Queue<Node> q = new LinkedList<>();
-        q.add(new Node(row,col));
-        visited[row][col] = true;
-
-        for(int i=0; i<n; i++){
-            int cost = (i*i)+(i+1)*(i+1);
-            int income = m * goldCnt - cost;
-            if(income > rewards[1]) {
-                rewards[0] = i+1;
-                rewards[1] = income;
-            }
-            int temp = 0;
-            while(qCnt>0) {
-                Node now = q.poll();
-                qCnt--;
-                int r = now.row;
-                int c = now.col;
-                
-                for(int d=0; d<4; d++) {
-                    int nr = r+direction[d][0];
-                    int nc = c+direction[d][1];
-
-                    if(0<=nr&&nr<n&&0<=nc&&nc<n&&!visited[nr][nc]) {
-                        if(graph[nr][nc] == 1) goldCnt++;
-                        temp++;
-                        visited[nr][nc] = true;
-                        q.add(new Node(nr,nc));
+            // 그리드를 순회하며 각 점을 중심으로 마름모 모양으로 금 채굴
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    int gold = getGold(grid, i, j, k, n);
+                    if (gold * m >= cost) {
+                        maxGold = Math.max(maxGold, gold);
                     }
                 }
-
             }
-
-            qCnt = temp;
-
         }
 
-        int i = n-1;
-        int cost = (i*i)+(i+1)*(i+1);
-        int income = m * goldCnt - cost;
-
-
-        if(income > rewards[1]) {
-                rewards[0] = i+1;
-                rewards[1] = income;
-            }
+        System.out.println(maxGold);
+        sc.close();
     }
 
-    static class Node {
-        int row;
-        int col;
-        public Node(int row, int col) {
-            this.row = row;
-            this.col = col;
+    // 주어진 (x, y) 위치에서 k 크기의 마름모 모양으로 채굴 가능한 금의 개수 계산
+    private static int getGold(int[][] grid, int x, int y, int k, int n) {
+        int gold = 0;
+        for (int i = -k; i <= k; i++) {
+            for (int j = -k; j <= k; j++) {
+                if (Math.abs(i) + Math.abs(j) <= k) {
+                    int nx = x + i;
+                    int ny = y + j;
+                    if (nx >= 0 && nx < n && ny >= 0 && ny < n) {
+                        gold += grid[nx][ny];
+                    }
+                }
+            }
         }
+        return gold;
     }
 }
