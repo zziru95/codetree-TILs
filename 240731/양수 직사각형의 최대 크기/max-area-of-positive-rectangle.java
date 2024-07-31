@@ -31,6 +31,7 @@ public class Main {
                 }
             }
         }
+        if (maxCnt == 0) maxCnt= -1; 
 
         System.out.println(maxCnt);
     }
