@@ -35,7 +35,7 @@ public class Main {
         System.out.println(maxCnt);
     }
     public static boolean check(int r1, int c1, int r2, int c2) {
-        return (r2>r1 && c2>c1);
+        return (r2>=r1 && c2>=c1);
     }
 
     public static boolean check2(int[][] matrix, int r1, int c1, int r2, int c2) {
