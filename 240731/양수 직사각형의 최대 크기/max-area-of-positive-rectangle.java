@@ -41,7 +41,7 @@ public class Main {
     public static boolean check2(int[][] matrix, int r1, int c1, int r2, int c2) {
         for (int i = r1; i <= r2; i++) {
             for (int j = c1; j <= c2; j++) {
-                if (matrix[i][j] < 0) {
+                if (matrix[i][j] =< 0) {
                     return false;
                 }
             }
