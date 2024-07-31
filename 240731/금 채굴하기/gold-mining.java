@@ -16,8 +16,8 @@ public class Main {
 
         int maxGold = 0;
 
-        // K를 0부터 n-1까지 순회
-        for (int k = 0; k < n; k++) {
+        // K를 0부터 2n-1까지 순회
+        for (int k = 0; k <= 2 * n - 1; k++) {
             int cost = k * k + (k + 1) * (k + 1);
 
             // 그리드를 순회하며 각 점을 중심으로 마름모 모양으로 금 채굴
