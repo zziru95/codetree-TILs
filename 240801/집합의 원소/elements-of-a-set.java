@@ -1,5 +1,5 @@
-import.java.util.*;
-import.java.io.*;
+import java.util.*;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -10,6 +10,9 @@ public class Main {
         int n = Integer.parseInt(st.nextToken());
         int m = Integer.parseInt(st.nextToken());
         int[] uf = new int[n+1];
+        for(int i=1; i<n+1; i++){
+            uf[i] = i;
+        }
         for(int i=0; i<m; i++) {
             st = new StringTokenizer(br.readLine());
             int command = Integer.parseInt(st.nextToken());
@@ -28,10 +31,10 @@ public class Main {
         }
     }
 
-    public static int find(int[] uf, int X) {
+    public static int find(int[] uf, int x) {
         if(uf[x]==x) return x;
 
-        rootNode = find(uf[x]);
+        int rootNode = find(uf,uf[x]);
         uf[x] = rootNode;
         return rootNode;
     }
