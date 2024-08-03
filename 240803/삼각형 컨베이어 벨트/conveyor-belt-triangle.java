@@ -17,18 +17,18 @@ public class Main {
         }
 
         for(int t=0; t<T; t++) {
-            int temp1 = temp[2][n-1];
-            int temp2 = temp[0][n-1];
-            int temp3 = temp[1][n-1];
+            int temp1 = triangle[2][n-1];
+            int temp2 = triangle[0][n-1];
+            int temp3 = triangle[1][n-1];
 
             for(int i=1; i<n-1; i++) {
-                temp[0][n-i] = temp[0][n-i-1];
-                temp[1][n-i] = temp[1][n-i-1];
-                temp[2][n-i] = temp[2][n-i-1];
+                triangle[0][n-i] = triangle[0][n-i-1];
+                triangle[1][n-i] = triangle[1][n-i-1];
+                triangle[2][n-i] = triangle[2][n-i-1];
             }
-            temp[0][0] = temp1;
-            temp[1][0] = temp2;
-            temp[2][0] = temp3;
+            triangle[0][0] = temp1;
+            triangle[1][0] = temp2;
+            triangle[2][0] = temp3;
         }
 
         for(int i=0; i<3; i++) {
