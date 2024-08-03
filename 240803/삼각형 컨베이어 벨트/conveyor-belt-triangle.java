@@ -21,7 +21,7 @@ public class Main {
             int temp2 = triangle[0][n-1];
             int temp3 = triangle[1][n-1];
 
-            for(int i=1; i<n-1; i++) {
+            for(int i=1; i<n; i++) {
                 triangle[0][n-i] = triangle[0][n-i-1];
                 triangle[1][n-i] = triangle[1][n-i-1];
                 triangle[2][n-i] = triangle[2][n-i-1];
