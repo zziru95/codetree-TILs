@@ -13,11 +13,11 @@ public class Main {
     public static int solve(String str, int n) {
         StringBuilder answer = new StringBuilder();
         if (n==1) return 2;
-        // if (n==2) {
-        //     if(str.charAt(0) == str.charAt(1)) {
-        //         return 2;
-        //     } else return 4;
-        // }
+        if (n==2) {
+            if(str.charAt(0) == str.charAt(1)) {
+                return 2;
+            } else return 4;
+        }
         String newStr = str.substring(n-2,n) + str.substring(0,n-2);
         char[] charArray = newStr.toCharArray();
         
