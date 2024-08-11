@@ -34,23 +34,15 @@ public class Main {
         charArray[2] = temp;
         charArray[3] = temp2;
 
-        int cnt = 0;
-        for (int i=0; i<n-1; i++) {
-            cnt++;
-            if (charArray[i] == charArray[i+1]) continue;
-
-            answer.append(charArray[i]);
-            answer.append(cnt);
-            cnt = 0;
+        int cnt = 1;
+        for (int i=1; i<n; i++) {
+            if (charArray[i] == charArray[i-1]) cnt++;
+            else {
+                answer.append(charArray[i-1]).append(cnt);
+                cnt=1;
+            }
         }
-        if (cnt>0) {
-            cnt++;
-            answer.append(charArray[n-1]);
-            answer.append(cnt);
-        } else {
-            answer.append(charArray[n-1]);
-            answer.append(1);
-        }
+        answer.append(charArray[n-1]).append(cnt);
 
         return answer.length();
 
