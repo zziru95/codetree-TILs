@@ -63,6 +63,7 @@ public class Main {
     }
 
     public static void printAnswer() {
+        System.out.println(bombs.length);
         for(int i=0; i<bombs.length; i++) {
             if(bombs[i] !=0 ) System.out.println(bombs[i]);
         }
