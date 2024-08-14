@@ -31,36 +31,57 @@ public class Main {
     }
 
     public static void bomb() {
-        int cnt = 1;
-        boolean check = false;
-        boolean check2 = false;
-        for(int i=1; i<bombs.length; i++) {
-            if(bombs[i] == bombs[i-1]) {
-                cnt++;
-                if(cnt>=M) check = true;
-                if(check) {
-                    check2 = true;
-                    bombs[i] = 0;
-                    bombs[i-1] = 0;
+        boolean check2 = true;  // 폭발이 일어나는지 여부를 나타내는 변수
+
+        while (check2) {
+            int cnt = 1;
+            boolean check = false;
+            check2 = false;
+            int s = -1;
+
+            for (int i = 1; i < bombs.length; i++) {
+                if (bombs[i] == bombs[i - 1]) {
+                    cnt++;
+                    if (s == -1) s = i - 1;
+                    if (cnt >= M) {
+                        check = true;
+                        check2 = true;
+                    }
+                } else {
+                    cnt = 1;
+                    if (check) {
+                        for (int j = s; 0 <= j && j <= i - 1; j++) {
+                            bombs[j] = 0;
+                        }
+                    }
+                    s = -1;
+                    check = false;
                 }
+            }
+
+            if (check) {
+                for (int i=s; i<bombs.length; i++) {
+                    bombs[i] = 0;
+                }
+            }
+
+
+            ArrayList<Integer> arr = new ArrayList<>();
+            for (int i = 0; i < bombs.length; i++) {
+                if (bombs[i] != 0) arr.add(bombs[i]);
+            }
+
+            if (arr.size() > 0) {
+                bombs = arr.stream().mapToInt(i -> i).toArray();
             } else {
-                cnt = 1;
-                check = false;
+                answerCheck = true;
+                break;
             }
         }
-        ArrayList<Integer> arr = new ArrayList<>();
-        for( int i=0; i<bombs.length; i++) {
-            if (bombs[i] != 0) arr.add(bombs[i]);
-        }
-
-        if(arr.size()>0) {
-            bombs = arr.stream().mapToInt(i -> i).toArray();
-            if(check2) bomb();
-        } else {
-            answerCheck = true;
-        }
-        
     }
+
+
+
 
     public static void printAnswer() {
         System.out.println(bombs.length);
