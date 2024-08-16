@@ -23,7 +23,6 @@ public class Main {
 
         for (int i = 0; i < K; i++) {
             bomb();
-            gravity();
             turn();
             gravity();
         }
@@ -32,7 +31,6 @@ public class Main {
 
         while (check) {
             bomb();
-            gravity();
         }
 
         printAnswer();
@@ -71,6 +69,10 @@ public class Main {
                 }
                 check = true;
             }
+        }
+        gravity();
+        if (check) {
+            bomb();
         }
     }
 
