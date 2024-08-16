@@ -48,7 +48,7 @@ public class Main {
             for(int i=1;i<N;i++) {
                 if (boxes[i-1][j] == boxes[i][j] && boxes[i][j] != 0) {
                     cnt++;
-                    if (cnt>=M && start == -1) {
+                    if (start == -1) {
                         start = i-1;
                     }
                 } else {
@@ -64,7 +64,7 @@ public class Main {
                     start = -1;
                 }
             }
-            if (start != -1) {
+            if (start != -1 && cnt>=M) {
                 for (int m=start; m<N; m++) {
                     boxes[m][j] =0;
                 }
@@ -127,5 +127,6 @@ public class Main {
         }
 
         System.out.println(sb);
+        System.out.println("____________");
     }
 }
