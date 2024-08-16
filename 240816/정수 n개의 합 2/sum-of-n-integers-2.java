@@ -22,7 +22,7 @@ public class Main {
         int maxSum = prefix[k-1];
 
         for(int i=k; i<n; i++) {
-            int temp = prefix[i]-prefix[i-k+1] + arr[i-k+1];
+            int temp = prefix[i]-prefix[i-k];
             maxSum = Math.max(maxSum, temp); 
         }
 
