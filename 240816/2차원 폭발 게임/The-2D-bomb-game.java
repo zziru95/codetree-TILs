@@ -100,6 +100,10 @@ public class Main {
 
 
     public static void printAnswer() {
+        if (M==1) {
+            System.out.println(0);
+            return;
+        }
         int cnt =0;
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
