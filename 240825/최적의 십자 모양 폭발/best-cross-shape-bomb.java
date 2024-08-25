@@ -72,42 +72,23 @@ public class Main {
 
     public static int count(int[][] graph) {
         int cnt = 0;
-        int temp = 1;
+
         for (int i = 0; i < n; i++) {
-            temp = 1;
             for (int j = 1; j < n; j++) {
                 if (graph[i][j] != 0 && graph[i][j] == graph[i][j - 1]) {
-                    temp++;
-                } else {
-                    if (temp ==2) {
-                        cnt++;
-                        temp =1;
-                    }
+                    cnt++;
+                } 
+            }
 
-                }
-            }
-            if (temp ==2) {
-                cnt++;
-            }
 
         }
 
         for (int j = 0; j < n; j++) {
-            temp = 1;
             for (int i = 1; i < n; i++) {
                 if (graph[i][j] != 0 && graph[i][j] == graph[i - 1][j]) {
-                    temp++;
-                } else {
-                    if (temp ==2) {
-                        cnt++;
-                        temp = 1;
-                    }
-                }
+                    cnt++;
+                } 
             }
-            if (temp ==2) {
-                cnt++;
-            }
-
         }
 
 
