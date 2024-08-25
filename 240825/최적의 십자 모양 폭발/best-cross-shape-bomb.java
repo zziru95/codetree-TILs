@@ -28,7 +28,7 @@ public class Main {
             }
         }
 
-        System.out.println(maxValue);
+       System.out.println(maxValue);
 
     }
 
@@ -50,6 +50,8 @@ public class Main {
                 }
             }
         }
+
+        temp = gravity(temp);
         maxValue = Math.max(maxValue, count(temp));
 
     }
