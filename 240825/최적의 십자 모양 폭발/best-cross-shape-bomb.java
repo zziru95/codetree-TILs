@@ -60,7 +60,7 @@ public class Main {
         int[][] temp = new int[n][n];
         for (int j = 0; j < n; j++) {
             int idx = n-1;
-            for (int i = 0; i < n; i++) {
+            for (int i = n-1; i >= 0; i--) {
                 if (graph[i][j] != 0) {
                     temp[idx][j] = graph[i][j];
                     idx--;
