@@ -35,6 +35,7 @@ public class Main {
     public static int goMiro(int r, int c) {
         int d = 0;
         int cnt = 0;
+        int tCnt = 0;
         while (true) {
             //다음곳
             int nr = r + direction[d][0];
@@ -43,8 +44,10 @@ public class Main {
             int wr = r + direction[(d+3)%4][0];
             int wc = c + direction[(d+3)%4][1];
             if (checkIndex(nr,nc) && visited[nr][nc] == d) return -1;
+            if (tCnt>4) return -1;
             if (checkIndex(nr, nc) && miro[nr][nc] == '#') {
                 d = (d + 1) % 4;
+                tCnt++;
                 continue;
             }
 
@@ -52,6 +55,7 @@ public class Main {
 
             if (checkIndex(nr, nc) && miro[nr][nc] == '.' && checkIndex(wr, wc) && miro[wr][wc] == '#') {
                 cnt++;
+                tCnt = 0;
                 r = nr;
                 c = nc;
                 visited[r][c] = d;
