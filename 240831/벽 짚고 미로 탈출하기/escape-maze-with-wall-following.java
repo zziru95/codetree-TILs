@@ -41,7 +41,7 @@ public class Main {
             //벽위치
             int wr = r + direction[(d+3)%4][0];
             int wc = c + direction[(d+3)%4][1];
-            if (visited[nr][nc]) return -1;
+            if (checkIndex(nr,nc) && visited[nr][nc]) return -1;
             if (checkIndex(nr, nc) && miro[nr][nc] == '#') {
                 d = (d + 1) % 4;
                 continue;
