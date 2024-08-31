@@ -41,7 +41,7 @@ public class Main {
             //벽위치
             int wr = r + direction[(d+3)%4][0];
             int wc = c + direction[(d+3)%4][1];
-
+            if (visited[nr][nc]) return -1;
             if (checkIndex(nr, nc) && miro[nr][nc] == '#') {
                 d = (d + 1) % 4;
                 continue;
@@ -53,6 +53,7 @@ public class Main {
                 cnt++;
                 r = nr;
                 c = nc;
+                visited[r][c] = true;
                 wr = r + direction[(d+3)%4][0];
                 wc = c + direction[(d+3)%4][1];
                 if (checkIndex(wr, wc) && miro[wr][wc] == '.') {
@@ -60,6 +61,7 @@ public class Main {
                     d = (d + 3) % 4;
                     r = r + direction[d][0];
                     c = c + direction[d][1];
+                    visited[r][c] = true;
                 }
 
                 continue;
