@@ -5,11 +5,9 @@ public class Main {
     static class Node{
         int r;
         int c;
-        int t;
-        public Node(int r, int c, int t){
+        public Node(int r, int c){
             this.r = r;
             this.c = c;
-            this.t = t;
         }
     }
 
@@ -29,33 +27,48 @@ public class Main {
         c = Integer.parseInt(st.nextToken())-1;
         arr = new int[n][n];
         System.out.print(bomb());
-
     }
 
     public static int bomb(){
-        int time = 1;
-        Queue<Node> q = new LinkedList<Node>();
-        q.add(new Node(r,c,time));
+        ArrayList<Node> bombList = new ArrayList<>();
+        bombList.add(new Node(r,c));
         arr[r][c] = 1;
         int cnt = 1;
-
-        while(!q.isEmpty() && q.peek().t <= m) {
-            Node now = q.poll();
-            int nowR = now.r;
-            int nowC = now.c;
-            int nowT = now.t;
-            for(int d=0; d<4; d++) {
-                int nextR = nowR + direction[d][0] * (int) Math.pow(2,m-1);
-                int nextC = nowC + direction[d][1] * (int) Math.pow(2,m-1);
-                if( 0<= nextR && nextR < n && 0<= nextC && nextC < n && arr[nextR][nextC] == 0) {
-                    arr[nextR][nextC] = 1;
-                    q.add(new Node(nextR, nextC, nowT+1));
-                    cnt++;
+        for(int time = 0; time<=m; time++) {
+            ArrayList<Node> temp = new ArrayList<>();
+            for(Node now : bombList) {
+                    for(int d=0; d<4; d++) {
+                        int nextR = now.r + direction[d][0] * (int) Math.pow(2,time-1);
+                        int nextC = now.c + direction[d][1] * (int) Math.pow(2,time-1);
+                        if( 0<= nextR && nextR < n && 0<= nextC && nextC < n && arr[nextR][nextC] == 0) {
+                            arr[nextR][nextC] = 1;
+                            temp.add(new Node(nextR, nextC));
+                            cnt++;
+                        }
+                    }
                 }
+            bombList.addAll(temp);
             }
-
+        return bombList.size();
         }
 
-        return cnt;
+     
+    
+
+
+    public static void check(){
+        StringBuilder sb =new StringBuilder();
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<n; j++) {
+                sb.append(arr[i][j]);
+                if(j<n-1) {
+                    sb.append(" ");
+                }
+            }
+            if(i<n-1) {
+                sb.append(System.lineSeparator());
+            }
+        }
+        System.out.println(sb);
     }
 }
