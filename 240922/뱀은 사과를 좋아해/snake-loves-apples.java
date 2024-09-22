@@ -46,9 +46,8 @@ public class Main {
             int t = Integer.parseInt(st.nextToken());
 
             for( int j=0; j<t; j++){
-                if(headMove(com)){
-                    count++;
-                } else {
+                                   count++;
+                if(!headMove(com)){
                     System.out.print(count);
                     return;
                 }
@@ -61,21 +60,19 @@ public class Main {
 
 
     public static boolean headMove(String com) {
-        int nr = snake.get(0).r;
-        int nc = snake.get(0).c;
+
+        int d = -1;
         if(com.equals("U")) {
-            nr += direction[0][0];
-            nc += direction[0][1];
+            d= 0;
         } else if(com.equals("D")) {
-            nr += direction[1][0];
-            nc += direction[1][1];
+            d=1;
         } else if(com.equals("L")) {
-            nr += direction[2][0];
-            nc += direction[2][1];
+            d=2;
         } else if(com.equals("R")) {
-            nr += direction[3][0];
-            nc += direction[3][1];
-        } 
+            d=3;
+        }
+        int nr = snake.get(0).r + direction[d][0];
+        int nc = snake.get(0).c + direction[d][1];
 
 
 
