@@ -2,16 +2,11 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static class Snake{
+    static class Snake {
         int r;
         int c;
 
         public Snake(int r, int c) {
-            this.r = r;
-            this.c = c;
-        }
-
-        public void move(int r, int c){
             this.r = r;
             this.c = c;
         }
@@ -22,7 +17,6 @@ public class Main {
     // 방향: 0 = 위, 1 = 아래, 2 = 왼쪽, 3 = 오른쪽
     static int[][] direction = { {-1,0}, {1,0}, {0,-1}, {0,1} };
     static ArrayList<Snake> snake;
-
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -59,70 +53,61 @@ public class Main {
         System.out.print(count);
     }
 
-
     public static boolean headMove(String com) {
         int d = -1;
-        if(com.equals("U")) {
-            d = 0;
-        } else if(com.equals("D")) {
-            d = 1;
-        } else if(com.equals("L")) {
-            d = 2;
-        } else if(com.equals("R")) {
-            d = 3;
-        } else {
-            // 잘못된 명령어인 경우
-            return false;
+        switch(com){
+            case "U":
+                d = 0;
+                break;
+            case "D":
+                d = 1;
+                break;
+            case "L":
+                d = 2;
+                break;
+            case "R":
+                d = 3;
+                break;
+            default:
+                return false; // 잘못된 명령어
         }
 
-        int nr = snake.get(0).r + direction[d][0];
-        int nc = snake.get(0).c + direction[d][1];
+        // 현재 머리 위치
+        Snake head = snake.get(0);
+        int nr = head.r + direction[d][0];
+        int nc = head.c + direction[d][1];
 
-        // 그리드 내에 있는지 확인
-        if(0 <= nr && nr < N && 0 <= nc && nc < N) {
-            // 자기 자신과 충돌하는지 확인
+        // 벽과 충돌하는지 확인
+        if(nr < 0 || nr >= N || nc < 0 || nc >= N){
+            return false; // 충돌
+        }
+
+        // 사과를 먹지 않고 이동할 경우
+        if(game[nr][nc] == 0){
+            // 꼬리를 제거
+            Snake tail = snake.remove(snake.size()-1);
+            game[tail.r][tail.c] = 0;
+
+            // 새로운 머리 위치에 충돌하는지 확인
             if(game[nr][nc] == 2){
                 return false; // 자기 자신과 충돌
             }
 
-            if(game[nr][nc] == 1) { // 사과를 먹은 경우
-                Snake last = snake.get(snake.size()-1);
-                int tempR = last.r;
-                int tempC = last.c;
-
-                for(int i = snake.size()-1; i >= 0; i--) {
-                    Snake now = snake.get(i);
-                    if(i == 0) {
-                        now.move(nr, nc);
-                        game[nr][nc] = 2; // 새로운 머리 위치를 2로 표시
-                    } else {
-                        Snake pre = snake.get(i-1);
-                        now.move(pre.r, pre.c);
-                    }
-                }
-                snake.add(new Snake(tempR, tempC));
-                game[tempR][tempC] = 2;
-                return true;
-            } else if(game[nr][nc] == 0) { // 빈 칸인 경우
-                Snake last = snake.get(snake.size()-1);
-                int tempR = last.r;
-                int tempC = last.c;
-                game[tempR][tempC] = 0; // 꼬리 위치를 비움
-
-                for(int i = snake.size()-1; i >= 0; i--) {
-                    Snake now = snake.get(i);
-                    if(i == 0) {
-                        now.move(nr, nc);
-                        game[nr][nc] = 2; // 새로운 머리 위치를 2로 표시
-                    } else {
-                        Snake pre = snake.get(i-1);
-                        now.move(pre.r, pre.c);
-                    }
-                }
-                return true;
-            }
+            // 머리를 추가
+            snake.add(0, new Snake(nr, nc));
+            game[nr][nc] = 2;
+            return true;
         }
-
-        return false; // 벽과 충돌
+        // 사과를 먹는 경우
+        else if(game[nr][nc] == 1){
+            // 사과를 먹었으므로 꼬리를 제거하지 않고 머리를 추가
+            snake.add(0, new Snake(nr, nc));
+            game[nr][nc] = 2;
+            return true;
+        }
+        // 자기 자신과 충돌
+        else{
+            return false;
+        }
     }
 }
