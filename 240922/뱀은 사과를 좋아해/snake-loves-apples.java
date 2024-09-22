@@ -32,6 +32,7 @@ public class Main {
         snake = new ArrayList<>();
         snake.add(new Snake(0,0));
         game = new int [N][N];
+        game[0][0] = 2;
         int count = 0;
         for(int i=0; i<M; i++) {
             st = new StringTokenizer(br.readLine());
@@ -46,7 +47,7 @@ public class Main {
             int t = Integer.parseInt(st.nextToken());
 
             for( int j=0; j<t; j++){
-                                   count++;
+                count++;
                 if(!headMove(com)){
                     System.out.print(count);
                     return;
@@ -103,6 +104,7 @@ public class Main {
                     Snake now = snake.get(i);
                     if(i==0) {
                         now.move(nr,nc);
+                        game[nr][nc] = 2;
                     } else {
                         Snake pre = snake.get(i-1);
                         now.move(pre.r,pre.c);
