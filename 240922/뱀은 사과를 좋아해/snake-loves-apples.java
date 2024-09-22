@@ -111,7 +111,6 @@ public class Main {
                     }
                 }
                 snake.add(new Snake(tempR,tempC));
-                game[tempR][tempC] = 2;
                 return true;
             } 
         }
