@@ -100,10 +100,7 @@ public class Main {
             snake.addFirst(new int[]{nr, nc});
             game[nr][nc] = 2; // 뱀의 위치로 표시
         }
-        else{
-            // 자기 자신과 충돌
-            return false;
-        }
+
 
         return true;
     }
