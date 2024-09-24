@@ -76,9 +76,13 @@ public class Main {
                 // 이동 결정
                 if(maxValue > currentValue) {
                     temp[targetR][targetC]++;
+                    // 입자가 이동한 경우 출력 (디버깅 용)
+                    // System.out.println("Particle moved from (" + r + "," + c + ") to (" + targetR + "," + targetC + ")");
                 }
                 else {
                     temp[r][c]++;
+                    // 입자가 머무른 경우 출력 (디버깅 용)
+                    // System.out.println("Particle stayed at (" + r + "," + c + ")");
                 }
             }
 
@@ -98,6 +102,9 @@ public class Main {
             // 큐 업데이트 및 입자 수 업데이트
             q = nextQ;
             initialCount = nextCount;
+
+            // 시간 단계별 입자 수 출력 (디버깅 용)
+            // System.out.println("Time step: " + (time + 1) + ", Count: " + initialCount);
 
             // 최적화를 위해 더 이상 입자가 없으면 시뮬레이션 중단
             if(initialCount == 0) {
