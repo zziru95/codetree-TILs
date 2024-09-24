@@ -39,7 +39,24 @@ public class Main {
                 int[] temp2 = q.poll();
                 int r = temp2[0];
                 int c = temp2[1];
-                temp[r][c] += 1;
+                int maxValue = -2626262;
+                int tempR = -1;
+                int tempC = -1;
+                for(int d=0; d<4; d++){
+                    int nr = r + direction[d][0];
+                    int nc = c + direction[d][1];
+
+                    if( 0<= nr && nr< n && 0<= nc && nc< n){
+                        if(arr[nr][nc]> maxValue) {
+                            maxValue = arr[nr][nc];
+                            tempR = nr;
+                            tempC = nc;
+                        }
+                    }
+                }
+
+                
+                temp[tempR][tempC] += 1;
             }
             for(int i=0; i<n; i++){
                 for(int j=0; j<n; j++){
