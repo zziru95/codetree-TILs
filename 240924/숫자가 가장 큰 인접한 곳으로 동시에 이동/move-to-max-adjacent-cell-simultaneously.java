@@ -1,76 +1,111 @@
 import java.util.*;
 import java.io.*;
+
 public class Main {
-    static int n,m,t;
+    static int n, m, t;
     static int[][] arr;
-    static int[][] direction = { {-1,0}, {1,0}, {0,-1}, {0,1}};
-
-
+    // 상, 하, 좌, 우 순으로 우선순위를 두기 위한 방향 배열
+    static int[][] direction = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
 
     public static void main(String[] args) throws IOException {
-        // 여기에 코드를 작성해주세요.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        t = Integer.parseInt(st.nextToken());
-        int count = m;
+
+        // 입력 받기
+        n = Integer.parseInt(st.nextToken()); // 그리드 크기
+        m = Integer.parseInt(st.nextToken()); // 초기 입자 수
+        t = Integer.parseInt(st.nextToken()); // 시간 단계 수
+
         arr = new int[n][n];
-        for(int i=0; i<n; i++){
+        for(int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
-            for(int j=0; j<n; j++){
+            for(int j = 0; j < n; j++) {
                 arr[i][j] = Integer.parseInt(st.nextToken());
             }
         }
 
-        Queue<int[]> q = new LinkedList<>();
-        for(int i=0; i<m;i++){
+        // 초기 입자 위치 카운트
+        int[][] particleCount = new int[n][n];
+        for(int i = 0; i < m; i++) {
             st = new StringTokenizer(br.readLine());
-            int r = Integer.parseInt(st.nextToken())-1;
-            int c = Integer.parseInt(st.nextToken())-1;
-            int[] temp = {r,c};
-            q.add(temp);
+            int r = Integer.parseInt(st.nextToken()) - 1; // 0-based 인덱스
+            int c = Integer.parseInt(st.nextToken()) - 1;
+            particleCount[r][c]++;
         }
 
-        for(int time=0; time<t; time++){
-            int[][] temp = new int [n][n];
-            int tempCnt = 0;
+        // 초기 큐 설정: 정확히 한 개의 입자가 있는 셀만 큐에 추가
+        Queue<int[]> q = new LinkedList<>();
+        int initialCount = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
+                if(particleCount[i][j] == 1) {
+                    q.add(new int[] {i, j});
+                    initialCount++;
+                }
+                // particleCount[i][j] >1 인 경우 모두 소멸
+            }
+        }
+
+        // 시뮬레이션 시작
+        for(int time = 0; time < t; time++) {
+            int[][] temp = new int[n][n]; // 다음 단계 입자 배치
+            // 현재 큐의 모든 입자 처리
             while(!q.isEmpty()) {
-                int[] temp2 = q.poll();
-                int r = temp2[0];
-                int c = temp2[1];
-                int maxValue = arr[r][c];
-                int tempR = r;
-                int tempC = c;
-                for(int d=0; d<4; d++){
+                int[] pos = q.poll();
+                int r = pos[0];
+                int c = pos[1];
+                int currentValue = arr[r][c];
+
+                // 이동할 셀 결정
+                int targetR = r;
+                int targetC = c;
+                int maxValue = currentValue;
+
+                for(int d = 0; d < 4; d++) {
                     int nr = r + direction[d][0];
                     int nc = c + direction[d][1];
-
-                    if( 0<= nr && nr< n && 0<= nc && nc< n){
-                        if(arr[nr][nc]> maxValue) {
+                    if(nr >=0 && nr < n && nc >=0 && nc < n) {
+                        if(arr[nr][nc] > maxValue) {
                             maxValue = arr[nr][nc];
-                            tempR = nr;
-                            tempC = nc;
+                            targetR = nr;
+                            targetC = nc;
                         }
                     }
                 }
 
-                
-                temp[tempR][tempC] += 1;
-            }
-            for(int i=0; i<n; i++){
-                for(int j=0; j<n; j++){
-                    if(temp[i][j] == 1) {
-                        tempCnt++;
-                        q.add(new int[] {i,j});
-                    }
+                // 이동 결정
+                if(maxValue > currentValue) {
+                    temp[targetR][targetC]++;
+                }
+                else {
+                    temp[r][c]++;
                 }
             }
-            count = tempCnt;
+
+            // 충돌 처리 및 다음 큐 설정
+            Queue<int[]> nextQ = new LinkedList<>();
+            int nextCount = 0;
+            for(int i = 0; i < n; i++) {
+                for(int j = 0; j < n; j++) {
+                    if(temp[i][j] == 1) {
+                        nextQ.add(new int[] {i, j});
+                        nextCount++;
+                    }
+                    // temp[i][j] >1 인 경우는 모두 소멸되므로 큐에 추가하지 않음
+                }
+            }
+
+            // 큐 업데이트 및 입자 수 업데이트
+            q = nextQ;
+            initialCount = nextCount;
+
+            // 최적화를 위해 더 이상 입자가 없으면 시뮬레이션 중단
+            if(initialCount == 0) {
+                break;
+            }
         }
-        
 
-        System.out.print(count);
-
+        // 최종 입자 수 출력
+        System.out.print(initialCount);
     }
 }
