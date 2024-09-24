@@ -32,7 +32,7 @@ public class Main {
             q.add(temp);
         }
 
-        for(int time=0; time<t; time++){
+        for(int time=0; time<=t; time++){
             int[][] temp = new int [n][n];
             int tempCnt = 0;
             while(!q.isEmpty()) {
