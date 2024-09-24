@@ -3,7 +3,7 @@ import java.io.*;
 public class Main {
     static int n,m,t;
     static int[][] arr;
-    static int[][] direction = { {-1,0}, {1,0}, {0,1}, {0,-1}};
+    static int[][] direction = { {-1,0}, {1,0}, {0,-1}, {0,1}};
 
 
 
