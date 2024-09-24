@@ -40,7 +40,7 @@ public class Main {
 
     public static void play(int r, int c, int d){
         int time = 1;
-        int stepLimit = n * n * 4; // 무한 루프 방지를 위한 제한
+        int stepLimit = n * n * 100; // 무한 루프 방지를 위한 제한
 
         while(time <= stepLimit){
             r += DIRECTION[d][0];
