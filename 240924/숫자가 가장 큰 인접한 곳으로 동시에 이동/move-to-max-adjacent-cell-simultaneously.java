@@ -32,16 +32,16 @@ public class Main {
             q.add(temp);
         }
 
-        for(int time=0; time<=t; time++){
+        for(int time=0; time<t; time++){
             int[][] temp = new int [n][n];
             int tempCnt = 0;
             while(!q.isEmpty()) {
                 int[] temp2 = q.poll();
                 int r = temp2[0];
                 int c = temp2[1];
-                int maxValue = -2626262;
-                int tempR = -1;
-                int tempC = -1;
+                int maxValue = arr[r][c];
+                int tempR = r;
+                int tempC = c;
                 for(int d=0; d<4; d++){
                     int nr = r + direction[d][0];
                     int nc = c + direction[d][1];
