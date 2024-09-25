@@ -42,7 +42,7 @@ public class Main {
                 q.add(new Node(r,c,d));
             }
 
-            for(int i=0; i<10000; i++){
+            for(int i=0; i<100; i++){
                 move();
             }
 
@@ -61,7 +61,7 @@ public class Main {
             if(nr<0 || N<=nr || nc<0 || N<=nc){
                 d = change[d];
                 nr = now.r;
-                nc =now.c; 
+                nc = now.c; 
             }
             temp[nr][nc] +=1;
             temp2[nr][nc] = new Node(nr,nc,d);
