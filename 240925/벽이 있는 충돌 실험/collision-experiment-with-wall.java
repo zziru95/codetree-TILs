@@ -42,7 +42,7 @@ public class Main {
                 q.add(new Node(r,c,d));
             }
 
-            for(int i=0; i<100; i++){
+            for(int i=0; i<N*N; i++){
                 move();
             }
 
