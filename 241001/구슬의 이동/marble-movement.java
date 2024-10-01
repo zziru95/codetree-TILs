@@ -71,7 +71,7 @@ public class Main {
 
         int answer = m;
 
-        for(int i=0; i<=t; i++) {
+        for(int i=0; i<t; i++) {
             answer = move();
         }
         System.out.print(answer);
@@ -129,15 +129,13 @@ public class Main {
         int count = 0;
         for(int i=0; i<n; i++){
             for (int j=0; j<n; j++){
-                int temp = nextBids[i][j].size();
-                if (temp > k) {
-                    count += k;
-                    while (nextBids[i][j].size() > k) {
+                
+                while (nextBids[i][j].size() > k) {
                         nextBids[i][j].poll();
                     }
-                } else {
-                    count += temp;
                 }
+                count += temp;
+                
             }
         }
         
