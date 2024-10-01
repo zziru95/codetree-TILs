@@ -129,13 +129,11 @@ public class Main {
         int count = 0;
         for(int i=0; i<n; i++){
             for (int j=0; j<n; j++){
-                
+
                 while (nextBids[i][j].size() > k) {
                         nextBids[i][j].poll();
-                    }
                 }
-                count += temp;
-                
+                count += nextBids[i][j].size();
             }
         }
         
