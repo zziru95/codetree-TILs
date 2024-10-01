@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-     static int n, m, t, k;
+    static int n, m, t, k;
     static int[][] arr;
     static int[][] direction = { {1,0}, {0,1}, {-1,0}, {0,-1} }; //하 우 상 좌
     static PriorityQueue<Bid>[][] bidArr= new PriorityQueue[50][50];
@@ -71,7 +71,7 @@ public class Main {
 
         int answer = m;
 
-        for(int i=0; i<t; i++) {
+        for(int i=0; i<=t; i++) {
             answer = move();
         }
         System.out.print(answer);
