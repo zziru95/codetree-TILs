@@ -2,10 +2,10 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static int n, m, t, k;
+     static int n, m, t, k;
     static int[][] arr;
     static int[][] direction = { {1,0}, {0,1}, {-1,0}, {0,-1} }; //하 우 상 좌
-    static Queue<Bid> q;
+    static PriorityQueue<Bid>[][] bidArr= new PriorityQueue[50][50];
 
     static class Bid implements Comparable<Bid>{
         int r;
@@ -25,9 +25,9 @@ public class Main {
         @Override
         public int compareTo(Bid o) {
             if(this.w == o.w) {
-                return o.num-this.num;
+                return this.num-o.num;
             }
-            return o.w-this.w;
+            return this.w-o.w;
         }
     }
 
@@ -43,7 +43,12 @@ public class Main {
         k = Integer.parseInt(st.nextToken());
 
         arr = new int[n][n];
-        q = new LinkedList<>();
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                bidArr[i][j] = new PriorityQueue<>();
+            }
+        }
+
         for(int i=0; i<m; i++){
             st = new StringTokenizer(br.readLine());
             int r = Integer.parseInt(st.nextToken())-1;
@@ -61,7 +66,7 @@ public class Main {
             } else if(D == 'R') {
                 d= 1;
             }
-            q.add(new Bid(r,c,w,d,i));
+            bidArr[r][c].add(new Bid(r,c,w,d,i));
         }
 
         int answer = m;
@@ -69,60 +74,87 @@ public class Main {
         for(int i=0; i<t; i++) {
             answer = move();
         }
+        System.out.print(answer);
 
     }
 
     public static int move(){
-        int[][] nextArr = new int[n][n];
-        PriorityQueue<Bid>[][] nextBids = new PriorityQueue<Bid>[n][n];
+        PriorityQueue<Bid>[][] nextBids = new PriorityQueue[n][n];
 
-        while(!q.isEmpty()) {
-            Bid now = q.poll();
-            int d = now.d;
-            int w = now.w;
-            int nr = now.r + w * direction[d][0];
-            int nc = now.c + w * direction[d][1];
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                nextBids[i][j] = new PriorityQueue<>();
+            }
+        }
 
-            if(0<=nr && nr<n && 0<=nc && nc<n) {
-                nextArr[nr][nc]++;
-                nextBids.add(new Bid(nr,nc,w,d,now.num));
-            } else{
-                 //하 우 상 좌  
-                if(d==0) {
-                    int temp = (nr + w) / (n-1) //벽에 맞는 횟수
-                    if(temp % 2 == 1) {
-                        nr = (n-1) - ((nr+ w) % (n-1))
-                    } else {
-                        nr = (nr+w) % (n-1)
-                    }
-                } else if(d==1){
-                    int temp = (nc + w) / (n-1);
-                    if(temp % 2 == 1) {
-                        nc = (n-1) - ((nc+ w) % (n-1));
-                    } else {
-                        nc = (nc+w) % (n-1);
-                    }
-                } else if(d==2) {
-                    int temp = ((n-1)-nr+w)  / (n-1) ;//벽에 맞는 횟수
-                    if(temp % 2 == 0) {
-                        nr = (nr+w) % (n-1);
-                    } else {
-                        nr = (n-1) - (nr+w) % (n-1);
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                while (!bidArr[i][j].isEmpty()) {
+                    Bid now = bidArr[i][j].poll();
+                    int d = now.d;
+                    int w = now.w;
+                    int nr = now.r + w * direction[d][0];
+                    int nc = now.c + w * direction[d][1];
+
+                    if(0<=nr && nr<n && 0<=nc && nc<n) {
+                        nextBids[nr][nc].add(new Bid(nr,nc,w,d,now.num));
+                    } else{
+                        //하 우 상 좌
+                        if(d==0) {
+                            int temp = (nr + w) / (n-1); //벽에 맞는 횟수
+                            if(temp % 2 == 1) {
+                                nr = (n-1) - ((nr+ w) % (n-1));
+                            } else {
+                                nr = (nr+w) % (n-1);
+                            }
+                        } else if(d==1){
+                            int temp = (nc + w) / (n-1);
+                            if(temp % 2 == 1) {
+                                nc = (n-1) - ((nc+ w) % (n-1));
+                            } else {
+                                nc = (nc+w) % (n-1);
+                            }
+                        } else if(d==2) {
+                            int temp = ((n-1)-nr+w)  / (n-1) ;//벽에 맞는 횟수
+                            if(temp % 2 == 0) {
+                                nr = (nr+w) % (n-1);
+                            } else {
+                                nr = (n-1) - (nr+w) % (n-1);
+                            }
+
+                        } else if(d==3) {
+                            int temp = ((n-1)-nc+w)  / (n-1);
+                            if(temp % 2 == 1) {
+                                nc = (nc+w) % (n-1);
+                            } else {
+                                nc = (n-1) - (nc+w) % (n-1);
+                            }
+                        }
+
+                        nextBids[nr][nc].add(new Bid(nr,nc,w,(d+2)%4,now.num));
                     }
 
-                } else if(d==3) {
-                    int temp = ((n-1)-nc+w)  / (n-1);
-                    if(temp % 2 == 1) {
-                        nc = (nc+w) % (n-1);
-                    } else {
-                        nc = (n-1) - (nc+w) % (n-1);
-                    }
                 }
-
-                nextArr[nr][nc]++;
-                q.add(new)
             }
 
+
         }
+        int count = 0;
+        for(int i=0; i<n; i++){
+            for (int j=0; j<n; j++){
+                int temp = nextBids[i][j].size();
+                if (temp > k) {
+                    count += k;
+                    while (nextBids[i][j].size() > k) {
+                        nextBids[i][j].poll();
+                    }
+                } else {
+                    count += temp;
+                }
+            }
+        }
+        
+        bidArr = nextBids;
+        return count;
     }
 }
