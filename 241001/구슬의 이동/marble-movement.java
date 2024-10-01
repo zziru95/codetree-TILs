@@ -93,33 +93,27 @@ public class Main {
                     Bid now = bidArr[i][j].poll();
                     int d = now.d;
                     int w = now.w;
-                    int nr = now.r + w * direction[d][0];
-                    int nc = now.c + w * direction[d][1];
+                    int nr = now.r;
+                    int nc = now.c;
 
-                    if(0<=nr && nr<n && 0<=nc && nc<n) {
-                        nextBids[nr][nc].add(new Bid(nr,nc,w,d,now.num));
-                    } else{
-                        if (d == 0 || d == 2) {
-                            int totalMovement = (Math.abs(nr) / (n - 1)) % 2;
-                            if (totalMovement == 1) {
-                                nr = (n - 1) - (Math.abs(nr) % (n - 1));  // 반사된 좌표
-                            } else {
-                                nr = Math.abs(nr) % (n - 1);  // 정상 좌표
-                            }
+                    for (int step = 0; step < w; step++) {
+                        nr += direction[d][0];
+                        nc += direction[d][1];
+
+                        // 벽에 부딪힐 때마다 방향을 반전시킴
+                        if (nr < 0 || nr >= n) {
+                            d = (d + 2) % 4;  // 상하 방향 반전
+                            nr += 2 * direction[d][0];  // 반사되서 한 칸 뒤로 감
                         }
-
-                        // 우(1), 좌(3)의 경우 좌표 계산
-                        if (d == 1 || d == 3) {
-                            int totalMovement = (Math.abs(nc) / (n - 1)) % 2;
-                            if (totalMovement == 1) {
-                                nc = (n - 1) - (Math.abs(nc) % (n - 1));  // 반사된 좌표
-                            } else {
-                                nc = Math.abs(nc) % (n - 1);  // 정상 좌표
-                            }
+                        if (nc < 0 || nc >= n) {
+                            d = (d + 2) % 4;  // 좌우 방향 반전
+                            nc += 2 * direction[d][1];  // 반사되서 한 칸 뒤로 감
                         }
-
-                        nextBids[nr][nc].add(new Bid(nr,nc,w,(d+2)%4,now.num));
                     }
+
+
+                    nextBids[nr][nc].add(new Bid(nr,nc,w,d,now.num));
+                    
 
                 }
             }
@@ -130,15 +124,20 @@ public class Main {
         for(int i=0; i<n; i++){
             for (int j=0; j<n; j++){
 
-                while (nextBids[i][j].size() > k) {
-                        nextBids[i][j].poll();
+                if(nextBids[i][j].size()>k) {
+                    PriorityQueue<Bid> temp = new PriorityQueue<>();
+                    for(int t=0; t<k; t++) {
+                        temp.add(nextBids[i][j].poll());
+                    }
+                    nextBids[i][j] = temp;
                 }
+
                 count += nextBids[i][j].size();
             }
         }
         
         bidArr = nextBids;
-
+        
         return count;
     }
 }
