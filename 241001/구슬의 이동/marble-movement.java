@@ -99,35 +99,22 @@ public class Main {
                     if(0<=nr && nr<n && 0<=nc && nc<n) {
                         nextBids[nr][nc].add(new Bid(nr,nc,w,d,now.num));
                     } else{
-                        //하 우 상 좌
-                        if(d==0) {
-                            int temp = (nr + w) / (n-1); //벽에 맞는 횟수
-                            if(temp % 2 == 1) {
-                                nr = (n-1) - ((nr+ w) % (n-1));
+                        if (d == 0 || d == 2) {
+                            int totalMovement = (Math.abs(nr) / (n - 1)) % 2;
+                            if (totalMovement == 1) {
+                                nr = (n - 1) - (Math.abs(nr) % (n - 1));  // 반사된 좌표
                             } else {
-                                nr = (nr+w) % (n-1);
+                                nr = Math.abs(nr) % (n - 1);  // 정상 좌표
                             }
-                        } else if(d==1){
-                            int temp = (nc + w) / (n-1);
-                            if(temp % 2 == 1) {
-                                nc = (n-1) - ((nc+ w) % (n-1));
-                            } else {
-                                nc = (nc+w) % (n-1);
-                            }
-                        } else if(d==2) {
-                            int temp = ((n-1)-nr+w)  / (n-1) ;//벽에 맞는 횟수
-                            if(temp % 2 == 0) {
-                                nr = (nr+w) % (n-1);
-                            } else {
-                                nr = (n-1) - (nr+w) % (n-1);
-                            }
+                        }
 
-                        } else if(d==3) {
-                            int temp = ((n-1)-nc+w)  / (n-1);
-                            if(temp % 2 == 1) {
-                                nc = (nc+w) % (n-1);
+                        // 우(1), 좌(3)의 경우 좌표 계산
+                        if (d == 1 || d == 3) {
+                            int totalMovement = (Math.abs(nc) / (n - 1)) % 2;
+                            if (totalMovement == 1) {
+                                nc = (n - 1) - (Math.abs(nc) % (n - 1));  // 반사된 좌표
                             } else {
-                                nc = (n-1) - (nc+w) % (n-1);
+                                nc = Math.abs(nc) % (n - 1);  // 정상 좌표
                             }
                         }
 
