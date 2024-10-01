@@ -25,9 +25,9 @@ public class Main {
         @Override
         public int compareTo(Bid o) {
             if(this.w == o.w) {
-                return this.num-o.num;
+                return o.num-this.num;
             }
-            return this.w-o.w;
+            return o.w-this.w;
         }
     }
 
@@ -138,6 +138,7 @@ public class Main {
         }
         
         bidArr = nextBids;
+
         return count;
     }
 }
