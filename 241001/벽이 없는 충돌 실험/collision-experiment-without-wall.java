@@ -1,7 +1,6 @@
 import java.util.*;
 import java.io.*;
 public class Main {
- 
     static class wNum {
         int w, num;
 
@@ -19,6 +18,7 @@ public class Main {
         int num;
 
         public Bid(int r, int c, int w, int d, int num) {
+
             this.r = r;
             this.c = c;
             this.w = w;
@@ -36,9 +36,9 @@ public class Main {
     }
 
     static int T, N;
-    static HashMap<Integer, HashMap<Integer, wNum>> memo; // 최고 값 갱신할 것
+    static HashMap<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
     static Deque<Bid> bids;
-    static int[][] direction = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // 상하좌우
+    static int[][] direction = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}}; // U, D, L, R
     static int answer;
 
 
@@ -53,6 +53,8 @@ public class Main {
             move();
             System.out.println(answer);
         }
+
+
     }
 
     public static void init(BufferedReader br) throws IOException {
@@ -87,14 +89,12 @@ public class Main {
         }
     }
 
+
     public static void move() {
-        int t = 0;
-        boolean hasCollision = false;  // 충돌 발생 여부 체크
-        while (t < 5000 && !bids.isEmpty()) {
-            t++;
+        for (int t = 1; t < 5001; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
-            Map<String, List<Bid>> collisionMap = new HashMap<>();  // 충돌 위치 저장
-            Map<String, Integer> visitTimeMap = new HashMap<>();    // 좌표 도달 시간 저장
+            HashMap<Integer, HashMap<Integer, wNum>> nextMemo = new HashMap<>(); //최고 값 갱신할 것
+
 
             while (!bids.isEmpty()) {
                 Bid now = bids.poll();
@@ -105,47 +105,51 @@ public class Main {
                 int num = now.num;
                 int nr = r + direction[d][0];
                 int nc = c + direction[d][1];
+                if (nextMemo.containsKey(r) && nextMemo.get(r).containsKey(c)) {
+                    answer = t * 2 -1;
+                }
 
-                String key = nr + "," + nc;
-
-                // 도착한 좌표에 대해 시간 체크
-                if (visitTimeMap.containsKey(key)) {
-                    // 교차점에서 충돌이 발생하는 경우
-                    int previousTime = visitTimeMap.get(key);
-                    if (previousTime == t - 1) { // 이전 턴에 도달한 다른 구슬과의 교차 충돌
-                        answer = t * 2 - 1;  // 교차점 충돌, 정확히 중간에서 발생
-                        hasCollision = true;
+                if (nextMemo.containsKey(nr)) {
+                    if (nextMemo.get(nr).containsKey(nc)) {
+                        answer = t * 2;
+                        wNum temp = nextMemo.get(nr).get(nc);
+                        if (w > temp.w) {
+                            removeBid(nextBids, nr, nc);
+                            nextBids.add(new Bid(nr, nc, w, d, num));
+                            nextMemo.get(nr).put(nc,new wNum(w,num));
+                        } else if (w == temp.w) {
+                            if (num > temp.num) {
+                                removeBid(nextBids, nr, nc);
+                                nextBids.add(new Bid(nr, nc, w, d, num));
+                                nextMemo.get(nr).put(nc,new wNum(w,num));
+                            }
+                        }
+                    } else {
+                        nextMemo.get(nr).put(nc, new wNum(w, num));
+                        nextBids.add(new Bid(nr, nc, w, d, num));
                     }
-                }
-
-                visitTimeMap.put(key, t); // 좌표에 도달한 시간을 기록
-
-                // 충돌 목록에 저장
-                if (!collisionMap.containsKey(key)) {
-                    collisionMap.put(key, new ArrayList<>());
-                }
-                collisionMap.get(key).add(new Bid(nr, nc, w, d, num));
-            }
-
-            // 충돌 처리
-            for (String key : collisionMap.keySet()) {
-                List<Bid> bidList = collisionMap.get(key);
-                if (bidList.size() > 1) {  // 충돌 발생
-                    hasCollision = true;
-                    answer = t * 2;
-                    // 가장 영향력이 큰 구슬을 남기고 제거
-                    Bid maxBid = Collections.max(bidList);  // Comparable에 따라 영향력이 큰 구슬 선택
-                    nextBids.add(maxBid);
                 } else {
-                    nextBids.add(bidList.get(0));  // 충돌이 없으면 그대로 추가
+                    nextMemo.put(nr, new HashMap<>());
+                    nextMemo.get(nr).put(nc, new wNum(w, num));
+                    nextBids.add(new Bid(nr, nc, w, d, num));
                 }
             }
+            memo = nextMemo;
+            bids = nextBids;
+            if(bids.isEmpty()) break;
 
-            bids = nextBids;  // 다음 턴으로 이동
         }
 
-        if (!hasCollision) {
-            answer = -1;  // 충돌이 없을 경우
+    }
+
+    public static void removeBid(Deque<Bid> deque, int r, int c) {
+        Iterator<Bid> iterator = deque.iterator();
+        while (iterator.hasNext()) {
+            Bid current = iterator.next();
+            if (current.r == r && current.c == c) {
+                iterator.remove();
+                break;
+            }
         }
     }
 }
