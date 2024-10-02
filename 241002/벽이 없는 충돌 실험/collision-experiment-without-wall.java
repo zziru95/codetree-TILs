@@ -1,12 +1,14 @@
 import java.util.*;
 import java.io.*;
 public class Main {
-    static class wNum {
-        int w, num;
 
-        public wNum(int w, int num) {
+    static class wNum {
+        int w, num, d;
+
+        public wNum(int w, int num, int d) {
             this.w = w;
             this.num = num;
+            this.d = d;
         }
     }
 
@@ -38,7 +40,7 @@ public class Main {
     static int T, N;
     static HashMap<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
     static Deque<Bid> bids;
-    static int[][] direction = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}}; // U, D, L, R
+    static int[][] direction = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}}; // U, L, D, R
     static int answer;
 
 
@@ -73,9 +75,9 @@ public class Main {
             if (D == 'U') {
                 d = 0;
             } else if (D == 'D') {
-                d = 1;
-            } else if (D == 'L') {
                 d = 2;
+            } else if (D == 'L') {
+                d = 1;
             } else if (D == 'R') {
                 d = 3;
             }
@@ -83,7 +85,7 @@ public class Main {
                 if (!memo.containsKey(r)) {
                     memo.put(r, new HashMap<>());
                 }
-                memo.get(r).put(c, new wNum(w, i));
+                memo.get(r).put(c, new wNum(w, i, d));
                 bids.add(new Bid(r, c, w, d, i));
             }
         }
@@ -105,10 +107,33 @@ public class Main {
                 int num = now.num;
                 int nr = r + direction[d][0];
                 int nc = c + direction[d][1];
+                //내자리로 오는 친구가 있을 때 방향따져서 반대방향이면 컷
                 if (nextMemo.containsKey(r) && nextMemo.get(r).containsKey(c)) {
-                    answer = t * 2 -1;
+                    wNum temp3 = nextMemo.get(r).get(c);
+                    if((temp3.d+2)%4 == d) {
+                        answer = t * 2 -1;
+                        if (w == temp3.w) {
+                            if(num > temp3.num) {
+                                removeBid(nextBids, r, c);
+                                nextMemo.get(r).remove(c);
+                            }
+                        } else if (w > temp3.w) {
+                            removeBid(nextBids, r, c);
+                            nextMemo.get(r).remove(c);
+                        } else {
+                            continue;
+                        }
+                    }
                 }
 
+                //내가 가는곳에 원래 있던 친구가 있었으면
+//                if (nextMemo.containsKey(r) && nextMemo.get(r).containsKey(c)) {
+//                    answer = t * 2 -1;
+//                }
+
+
+
+                // 다음 내가 가려는 곳에 또 오는 친구가 있을 때
                 if (nextMemo.containsKey(nr)) {
                     if (nextMemo.get(nr).containsKey(nc)) {
                         answer = t * 2;
@@ -116,21 +141,21 @@ public class Main {
                         if (w > temp.w) {
                             removeBid(nextBids, nr, nc);
                             nextBids.add(new Bid(nr, nc, w, d, num));
-                            nextMemo.get(nr).put(nc,new wNum(w,num));
+                            nextMemo.get(nr).put(nc,new wNum(w,num,d));
                         } else if (w == temp.w) {
                             if (num > temp.num) {
                                 removeBid(nextBids, nr, nc);
                                 nextBids.add(new Bid(nr, nc, w, d, num));
-                                nextMemo.get(nr).put(nc,new wNum(w,num));
+                                nextMemo.get(nr).put(nc,new wNum(w,num,d));
                             }
                         }
                     } else {
-                        nextMemo.get(nr).put(nc, new wNum(w, num));
+                        nextMemo.get(nr).put(nc, new wNum(w, num,d));
                         nextBids.add(new Bid(nr, nc, w, d, num));
                     }
                 } else {
                     nextMemo.put(nr, new HashMap<>());
-                    nextMemo.get(nr).put(nc, new wNum(w, num));
+                    nextMemo.get(nr).put(nc, new wNum(w, num,d));
                     nextBids.add(new Bid(nr, nc, w, d, num));
                 }
             }
