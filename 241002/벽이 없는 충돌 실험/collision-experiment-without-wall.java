@@ -94,7 +94,7 @@ public class Main {
 
 
     public static void move() {
-        for (int t = 1; t < 5001; t++) {
+        for (int t = 1; t < 3000; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
             TreeMap<Integer, HashMap<Integer, wNum>> nextMemo = new TreeMap<>(); //최고 값 갱신할 것
 
