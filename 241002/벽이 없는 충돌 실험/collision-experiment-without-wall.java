@@ -94,7 +94,7 @@ public class Main {
 
 
     public static void move() {
-        for (int t = 1; t < 3000; t++) {
+        for (int t = 1; t < 4000; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
             HashMap<Integer, HashMap<Integer, wNum>> nextMemo = new HashMap<>();
 
