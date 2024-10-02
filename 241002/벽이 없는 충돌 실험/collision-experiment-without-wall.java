@@ -39,7 +39,7 @@ public class Main {
     }
 
     static int T, N;
-    static TreeMap<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
+    static Map<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
     static Deque<Bid> bids;
     static int[][] direction = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}}; // U, L, D, R
     static int answer;
@@ -64,7 +64,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         answer = -1;
-        memo = new TreeMap<>();
+        memo = new HashMap<>();
         bids = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -96,8 +96,7 @@ public class Main {
     public static void move() {
         for (int t = 1; t < 3000; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
-            TreeMap<Integer, HashMap<Integer, wNum>> nextMemo = new TreeMap<>(); //최고 값 갱신할 것
-
+            HashMap<Integer, HashMap<Integer, wNum>> nextMemo = new HashMap<>();
 
             while (!bids.isEmpty()) {
                 Bid now = bids.poll();
@@ -108,64 +107,38 @@ public class Main {
                 int num = now.num;
                 int nr = r + direction[d][0];
                 int nc = c + direction[d][1];
-                //내자리로 오는 친구가 있을 때 방향따져서 반대방향이면 컷
-                if (nextMemo.containsKey(r) && nextMemo.get(r).containsKey(c)) {
-                    wNum temp3 = nextMemo.get(r).get(c);
-                    if((temp3.d+2)%4 == d) {
-                        answer = t * 2 -1;
-                        if (w == temp3.w) {
-                            if(num > temp3.num) {
-                                removeBid(nextBids, r, c);
-                                nextMemo.get(r).remove(c);
-                            }
-                        } else if (w > temp3.w) {
-                            removeBid(nextBids, r, c);
-                            nextMemo.get(r).remove(c);
-                        } else {
-                            continue;
-                        }
+
+                // 내자리로 오는 친구가 있을 때 방향따져서 반대방향이면 컷
+                wNum existing = nextMemo.getOrDefault(r, new HashMap<>()).get(c);
+                if (existing != null && (existing.d + 2) % 4 == d) {
+                    answer = t * 2 - 1;
+                    if (w > existing.w || (w == existing.w && num > existing.num)) {
+                        removeBid(nextBids, r, c);
+                        nextMemo.get(r).remove(c);
+                    } else {
+                        continue;
                     }
                 }
 
-                //내가 가는곳에 원래 있던 친구가 있었으면
-//                if (nextMemo.containsKey(r) && nextMemo.get(r).containsKey(c)) {
-//                    answer = t * 2 -1;
-//                }
-
-
-
                 // 다음 내가 가려는 곳에 또 오는 친구가 있을 때
-                if (nextMemo.containsKey(nr)) {
-                    if (nextMemo.get(nr).containsKey(nc)) {
-                        answer = t * 2;
-                        wNum temp = nextMemo.get(nr).get(nc);
-                        if (w > temp.w) {
-                            removeBid(nextBids, nr, nc);
-                            nextBids.add(new Bid(nr, nc, w, d, num));
-                            nextMemo.get(nr).put(nc,new wNum(w,num,d));
-                        } else if (w == temp.w) {
-                            if (num > temp.num) {
-                                removeBid(nextBids, nr, nc);
-                                nextBids.add(new Bid(nr, nc, w, d, num));
-                                nextMemo.get(nr).put(nc,new wNum(w,num,d));
-                            }
-                        }
-                    } else {
-                        nextMemo.get(nr).put(nc, new wNum(w, num,d));
+                wNum future = nextMemo.getOrDefault(nr, new HashMap<>()).get(nc);
+                if (future != null) {
+                    answer = t * 2;
+                    if (w > future.w || (w == future.w && num > future.num)) {
+                        removeBid(nextBids, nr, nc);
                         nextBids.add(new Bid(nr, nc, w, d, num));
+                        nextMemo.get(nr).put(nc, new wNum(w, num, d));
                     }
                 } else {
-                    nextMemo.put(nr, new HashMap<>());
-                    nextMemo.get(nr).put(nc, new wNum(w, num,d));
+                    nextMemo.computeIfAbsent(nr, k -> new HashMap<>()).put(nc, new wNum(w, num, d));
                     nextBids.add(new Bid(nr, nc, w, d, num));
                 }
             }
+
             memo = nextMemo;
             bids = nextBids;
-            if(bids.isEmpty()) break;
-
+            if (bids.isEmpty()) break;
         }
-
     }
 
     public static void removeBid(Deque<Bid> deque, int r, int c) {
