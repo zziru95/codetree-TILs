@@ -20,7 +20,6 @@ public class Main {
         int num;
 
         public Bid(int r, int c, int w, int d, int num) {
-
             this.r = r;
             this.c = c;
             this.w = w;
@@ -38,33 +37,32 @@ public class Main {
     }
 
     static int T, N;
-    static Map<Integer, TreeMap<Integer, wNum>> memo; //최고 값 갱신할 것
-    static Deque<Bid> bids;
+    static Map<Integer, TreeSet<Bid>> bidMap;  // 좌표별 입찰자 관리
+    static Deque<Bid> bids;  // 움직일 입찰자 목록
+    static Set<String> collisionPoints;  // 충돌 좌표 기록
     static int[][] direction = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}}; // U, L, D, R
     static int answer;
 
-
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
         T = Integer.parseInt(st.nextToken());
+        
         for (int t = 0; t < T; t++) {
             init(br);
             move();
             System.out.println(answer);
         }
-
-
     }
 
     public static void init(BufferedReader br) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         answer = -1;
-        memo = new TreeMap<>();
+        bidMap = new HashMap<>();
+        collisionPoints = new HashSet<>();
         bids = new LinkedList<>();
+        
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
             int r = Integer.parseInt(st.nextToken());
@@ -81,73 +79,40 @@ public class Main {
             } else if (D == 'R') {
                 d = 3;
             }
-            if (d != -1) {
-                if (!memo.containsKey(r)) {
-                    memo.put(r, new TreeMap<>());
-                }
-                memo.get(r).put(c, new wNum(w, i, d));
-                bids.add(new Bid(r, c, w, d, i));
-            }
+            bids.add(new Bid(r, c, w, d, i));
         }
     }
-
 
     public static void move() {
-        for (int t = 1; t < 4000; t++) {
-            Deque<Bid> nextBids = new LinkedList<>();
-            TreeMap<Integer, TreeMap<Integer, wNum>> nextMemo = new TreeMap<>();
-
+        for (int t = 1; t < 3000; t++) {
+            Map<Integer, TreeSet<Bid>> nextBidMap = new HashMap<>();
+            
             while (!bids.isEmpty()) {
                 Bid now = bids.poll();
-                int r = now.r;
-                int c = now.c;
-                int w = now.w;
-                int d = now.d;
-                int num = now.num;
-                int nr = r + direction[d][0];
-                int nc = c + direction[d][1];
+                int nr = now.r + direction[now.d][0];
+                int nc = now.c + direction[now.d][1];
 
-                // 내자리로 오는 친구가 있을 때 방향따져서 반대방향이면 컷
-                wNum existing = nextMemo.getOrDefault(r, new TreeMap<>()).get(c);
-                if (existing != null && (existing.d + 2) % 4 == d) {
-                    answer = t * 2 - 1;
-                    if (w > existing.w || (w == existing.w && num > existing.num)) {
-                        removeBid(nextBids, r, c);
-                        nextMemo.get(r).remove(c);
-                    } else {
-                        continue;
-                    }
-                }
-
-                // 다음 내가 가려는 곳에 또 오는 친구가 있을 때
-                wNum future = nextMemo.getOrDefault(nr, new TreeMap<>()).get(nc);
-                if (future != null) {
+                // 충돌 좌표 체크
+                String key = nr + "," + nc;
+                if (collisionPoints.contains(key)) {
                     answer = t * 2;
-                    if (w > future.w || (w == future.w && num > future.num)) {
-                        removeBid(nextBids, nr, nc);
-                        nextBids.add(new Bid(nr, nc, w, d, num));
-                        nextMemo.get(nr).put(nc, new wNum(w, num, d));
-                    }
+                    continue;
+                }
+
+                // 다음 좌표에 입찰자가 있을 때 충돌 발생
+                TreeSet<Bid> futureBids = nextBidMap.getOrDefault(nr, new TreeSet<>());
+                if (!futureBids.isEmpty()) {
+                    collisionPoints.add(key);  // 충돌 좌표 추가
+                    answer = t * 2;
                 } else {
-                    nextMemo.computeIfAbsent(nr, k -> new TreeMap<>()).put(nc, new wNum(w, num, d));
-                    nextBids.add(new Bid(nr, nc, w, d, num));
+                    // 입찰자를 좌표에 추가
+                    futureBids.add(new Bid(nr, nc, now.w, now.d, now.num));
+                    nextBidMap.put(nr, futureBids);
                 }
             }
 
-            memo = nextMemo;
-            bids = nextBids;
+            bidMap = nextBidMap;
             if (bids.isEmpty()) break;
-        }
-    }
-
-    public static void removeBid(Deque<Bid> deque, int r, int c) {
-        Iterator<Bid> iterator = deque.iterator();
-        while (iterator.hasNext()) {
-            Bid current = iterator.next();
-            if (current.r == r && current.c == c) {
-                iterator.remove();
-                break;
-            }
         }
     }
 }
