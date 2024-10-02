@@ -64,7 +64,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         answer = -1;
-        memo = new HashMap<>();
+        memo = new TreeMap<>();
         bids = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -96,7 +96,7 @@ public class Main {
     public static void move() {
         for (int t = 1; t < 4000; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
-            HashMap<Integer, HashMap<Integer, wNum>> nextMemo = new HashMap<>();
+            TreeMap<Integer, HashMap<Integer, wNum>> nextMemo = new TreeMap<>();
 
             while (!bids.isEmpty()) {
                 Bid now = bids.poll();
@@ -109,7 +109,7 @@ public class Main {
                 int nc = c + direction[d][1];
 
                 // 내자리로 오는 친구가 있을 때 방향따져서 반대방향이면 컷
-                wNum existing = nextMemo.getOrDefault(r, new HashMap<>()).get(c);
+                wNum existing = nextMemo.getOrDefault(r, new TreeMap<>()).get(c);
                 if (existing != null && (existing.d + 2) % 4 == d) {
                     answer = t * 2 - 1;
                     if (w > existing.w || (w == existing.w && num > existing.num)) {
@@ -121,7 +121,7 @@ public class Main {
                 }
 
                 // 다음 내가 가려는 곳에 또 오는 친구가 있을 때
-                wNum future = nextMemo.getOrDefault(nr, new HashMap<>()).get(nc);
+                wNum future = nextMemo.getOrDefault(nr, new TreeMap<>()).get(nc);
                 if (future != null) {
                     answer = t * 2;
                     if (w > future.w || (w == future.w && num > future.num)) {
@@ -130,7 +130,7 @@ public class Main {
                         nextMemo.get(nr).put(nc, new wNum(w, num, d));
                     }
                 } else {
-                    nextMemo.computeIfAbsent(nr, k -> new HashMap<>()).put(nc, new wNum(w, num, d));
+                    nextMemo.computeIfAbsent(nr, k -> new TreeMap<>()).put(nc, new wNum(w, num, d));
                     nextBids.add(new Bid(nr, nc, w, d, num));
                 }
             }
