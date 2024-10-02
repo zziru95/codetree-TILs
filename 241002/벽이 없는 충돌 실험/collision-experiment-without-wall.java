@@ -93,7 +93,7 @@ public class Main {
 
 
     public static void move() {
-        for (int t = 1; t < 3000; t++) {
+        for (int t = 1; t < 4000; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
             TreeMap<Integer, TreeMap<Integer, wNum>> nextMemo = new TreeMap<>();
 
