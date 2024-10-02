@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 public class Main {
 
-
     static class wNum {
         int w, num, d;
 
@@ -39,7 +38,7 @@ public class Main {
     }
 
     static int T, N;
-    static Map<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
+    static Map<Integer, TreeMap<Integer, wNum>> memo; //최고 값 갱신할 것
     static Deque<Bid> bids;
     static int[][] direction = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}}; // U, L, D, R
     static int answer;
@@ -84,7 +83,7 @@ public class Main {
             }
             if (d != -1) {
                 if (!memo.containsKey(r)) {
-                    memo.put(r, new HashMap<>());
+                    memo.put(r, new TreeMap<>());
                 }
                 memo.get(r).put(c, new wNum(w, i, d));
                 bids.add(new Bid(r, c, w, d, i));
@@ -94,9 +93,9 @@ public class Main {
 
 
     public static void move() {
-        for (int t = 1; t < 4000; t++) {
+        for (int t = 1; t < 3000; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
-            TreeMap<Integer, HashMap<Integer, wNum>> nextMemo = new TreeMap<>();
+            TreeMap<Integer, TreeMap<Integer, wNum>> nextMemo = new TreeMap<>();
 
             while (!bids.isEmpty()) {
                 Bid now = bids.poll();
