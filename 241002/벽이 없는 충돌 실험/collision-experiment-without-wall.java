@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 public class Main {
 
+
     static class wNum {
         int w, num, d;
 
@@ -38,7 +39,7 @@ public class Main {
     }
 
     static int T, N;
-    static HashMap<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
+    static TreeMap<Integer, HashMap<Integer, wNum>> memo; //최고 값 갱신할 것
     static Deque<Bid> bids;
     static int[][] direction = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}}; // U, L, D, R
     static int answer;
@@ -63,7 +64,7 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         answer = -1;
-        memo = new HashMap<>();
+        memo = new TreeMap<>();
         bids = new LinkedList<>();
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
@@ -93,9 +94,9 @@ public class Main {
 
 
     public static void move() {
-        for (int t = 1; t < 3000; t++) {
+        for (int t = 1; t < 5001; t++) {
             Deque<Bid> nextBids = new LinkedList<>();
-            HashMap<Integer, HashMap<Integer, wNum>> nextMemo = new HashMap<>(); //최고 값 갱신할 것
+            TreeMap<Integer, HashMap<Integer, wNum>> nextMemo = new TreeMap<>(); //최고 값 갱신할 것
 
 
             while (!bids.isEmpty()) {
