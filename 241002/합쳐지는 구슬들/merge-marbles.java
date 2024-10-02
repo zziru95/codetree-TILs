@@ -22,6 +22,8 @@ public class Main {
 
     static int[][] direction = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
+    static int[] change = {1,0,3,2};
+
     static int maxW;
 
 
@@ -60,7 +62,7 @@ public class Main {
         sb.append(" ");
         sb.append(maxW);
         System.out.print(sb);
-        
+
     }
 
     public static int move() {
@@ -74,7 +76,11 @@ public class Main {
             int num = nowBids.num;
             int nr = nowBids.r + direction[d][0];
             int nc = nowBids.c + direction[d][1];
-
+            if (!(0 <= nr && nr < n && 0 <= nc && nc < n)) {
+                nr = nowBids.r;
+                nc = nowBids.c;
+                d = change[d];
+            }
             if (nextArr[nr][nc] == null) {
                 nextArr[nr][nc] = nowBids;
                 nextBids.add(new int[]{nr, nc});
