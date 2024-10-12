@@ -49,8 +49,8 @@ public class Main {
         visited[now.r][now.c] = true;
         q.add(now);
         int maxV = 0;
-        int fr = 99999;
-        int fc = 99999;
+        int fr = now.r;
+        int fc = now.c;
         int w = now.w;
         while(!q.isEmpty()){
             Node current = q.poll();
