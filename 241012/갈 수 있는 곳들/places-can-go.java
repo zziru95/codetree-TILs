@@ -27,8 +27,8 @@ public class Main {
         int cnt = 0;
         for(int i=0; i<k; i++){
             st = new StringTokenizer(br.readLine());
-            int r = Integer.parseInt(st.nextToken());
-            int c = Integer.parseInt(st.nextToken());
+            int r = Integer.parseInt(st.nextToken())-1;
+            int c = Integer.parseInt(st.nextToken())-1;
             q.add(new int[] {r,c});
             visited[r][c] = true;
             cnt++;
@@ -49,6 +49,6 @@ public class Main {
             }
         }
 
-        System.out.print(cnt-1);
+        System.out.print(cnt);
     }
 }
