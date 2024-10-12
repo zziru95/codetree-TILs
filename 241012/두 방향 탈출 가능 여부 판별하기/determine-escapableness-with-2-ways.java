@@ -7,6 +7,7 @@ public class Main {
     static int n,m;
     static int[][] map;
     static boolean[][] visited;
+    static int answer = 0;
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
         BufferedReader br =new BufferedReader(new InputStreamReader(System.in));
@@ -23,22 +24,25 @@ public class Main {
             }
         }
         visited[0][0] = true;
-        System.out.print(dfs(0,0));
+        dfs(0,0);
+        System.out.print(answer);
     }
 
 
-    public static int dfs(int r, int c){
-        if(r==n-1 && c==m-1) return 1;
+    public static void dfs(int r, int c){
+        if(r==n-1 && c==m-1) {
+            answer = 1;
+            return;
+        }
+
         for(int d=0; d<2; d++){
             int nr = r+ direction[d][0];
             int nc = c+ direction[d][1];
             if(0<= nr && nr< n && 0<= nc && nc< m && !visited[nr][nc] && map[nr][nc] ==1){
                 visited[nr][nc] = true;
-                if(dfs(nr,nc) ==1 ) return 1;
-                visited[nr][nc] = false;
+                dfs(nr,nc);
             }
         }
 
-        return 0;
     }
 }
