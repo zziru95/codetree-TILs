@@ -3,7 +3,7 @@ import java.io.*;
 
 
 public class Main {
-    static int[][] direction = { {-1,0},{0,1} };
+    static int[][] direction = { {1,0},{0,1} };
     static int n,m;
     static int[][] map;
     static boolean[][] visited;
