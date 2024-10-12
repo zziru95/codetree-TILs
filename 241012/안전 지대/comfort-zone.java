@@ -4,7 +4,7 @@ import java.io.*;
 public class Main {
     static int N,M;
     static int[][] arr;
-    static int maxCnt = 0;
+    static int maxCnt = -1;
     static int maxK = 0;
     static int answerK =0;
     static boolean[][] visited;
@@ -25,7 +25,7 @@ public class Main {
                 maxK=Math.max(arr[i][j], maxK);
             }
         }
-        for(int k=0; k<maxK; k++){
+        for(int k=1; k<maxK; k++){
             visited = new boolean[N][M];
             int tempCnt = 0;
             for(int i=0; i<N; i++){
