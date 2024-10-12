@@ -41,7 +41,6 @@ public class Main {
             if(0<= nr && nr< n && 0<= nc && nc< m && !visited[nr][nc] && map[nr][nc] ==1){
                 visited[nr][nc] = true;
                 dfs(nr,nc);
-                visited[nr][nc] = false;
             }
         }
 
