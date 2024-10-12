@@ -37,6 +37,7 @@ public class Main {
         for(int i=0; i<k; i++){
             next = bfs(now);
             now = next;
+            if(now.r == next.r && now.c == next.c) break;
             
         }
 
