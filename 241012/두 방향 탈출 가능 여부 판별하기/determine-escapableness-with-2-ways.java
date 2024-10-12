@@ -32,7 +32,7 @@ public class Main {
         for(int d=0; d<2; d++){
             int nr = r+ direction[d][0];
             int nc = c+ direction[d][1];
-            if(0<= nr && nr< n && 0<= nc && nc< m && !visited[nr][nc]){
+            if(0<= nr && nr< n && 0<= nc && nc< m && !visited[nr][nc] && map[nr][nc] ==1){
                 visited[nr][nc] = true;
                 if(dfs(nr,nc) ==1 ) return 1;
             }
