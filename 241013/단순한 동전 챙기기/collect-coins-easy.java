@@ -75,7 +75,7 @@ public class Main {
             } else{
                 before = pairs[comb[cnt-1]];
             }
-            int newDistance = distance+Math.abs(start.r-next.r)+ Math.abs(start.c-next.c);
+            int newDistance = distance+Math.abs(before.r-next.r)+ Math.abs(before.c-next.c);
             choose(i+1,cnt+1,newDistance,start,end);
         }
     }
