@@ -86,6 +86,9 @@ public class Main {
     public static void bfs(){
         Queue<Node> que = new ArrayDeque<>(q);
         visited = new boolean[n][n];
+        for(Node temp : que){
+            visited[temp.r][temp.c] = true;
+        }
         int cnt =0;
 
         while(!que.isEmpty()){
@@ -93,7 +96,6 @@ public class Main {
             int r = current.r;
             int c= current.c;
             cnt++;
-            visited[r][c] = true;
             for(int d=0; d<4; d++){
                 int nr = r + direction[d][0];
                 int nc = c + direction[d][1];
