@@ -43,8 +43,13 @@ public class Main {
         }
 
         Collections.sort(coins);
-        choose(0,0,0,start,end);
-        System.out.print(minD);
+        if(coins.size()>=3){
+            choose(0,0,0,start,end);
+            System.out.print(minD);
+        }else{
+            System.out.print(-1);
+        }
+
     }
 
 
