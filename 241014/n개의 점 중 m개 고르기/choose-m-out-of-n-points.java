@@ -37,12 +37,15 @@ public class Main {
     }
 
     public static void calcD(){
+        int Distance = 0;
         for(int i=0; i<m; i++){
             for(int j=0; j<m; j++){
                 if(i==j) continue;
                 int newD = (comb[i][0]-comb[j][0]) * (comb[i][0]-comb[j][0]) + (comb[i][1]-comb[j][1])* (comb[i][1]-comb[j][1]);
-                minD = Math.min(minD,newD); 
+                Distance = Math.max(Distance,newD); 
             }
         }
+
+        minD = Math.min(minD,Distance);
     }
 }
