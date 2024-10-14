@@ -4,6 +4,7 @@ import java.io.*;
 public class Main {
     static int n, m;
     static int[][] dots;
+    static int[][] comb; // 선택된 점들을 저장할 배열
     static int minD = Integer.MAX_VALUE;
 
     public static void main(String[] args) throws IOException {
@@ -14,6 +15,7 @@ public class Main {
         m = Integer.parseInt(st.nextToken());
 
         dots = new int[n][2]; // 점 좌표 배열
+        comb = new int[m][2]; // 선택된 점 조합 배열
 
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
@@ -34,12 +36,12 @@ public class Main {
         }
 
         for (int i = start; i < n; i++) {
-            // 새로 선택할 점을 dots[i]로 설정
+            comb[cnt] = dots[i]; // 선택된 점을 comb에 저장
             int newMaxDistance = maxDistance;
 
             // 선택된 점들과의 최대 거리를 계산하여 업데이트
             for (int j = 0; j < cnt; j++) {
-                int distance = calculateDistance(dots[i], dots[j]);
+                int distance = calculateDistance(comb[cnt], comb[j]);
                 newMaxDistance = Math.max(newMaxDistance, distance);
             }
 
