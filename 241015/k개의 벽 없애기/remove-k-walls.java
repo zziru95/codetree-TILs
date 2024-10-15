@@ -68,6 +68,7 @@ public class Main {
 
     public static int bfs(){
         Queue<int[]> q = new ArrayDeque<>();
+        resetVisited();
         q.add(new int[] {start[0],start[1],0});
         visited[start[0]][start[1]] = true;
         while(!q.isEmpty()){
@@ -93,5 +94,9 @@ public class Main {
 
 
 
-
+    public static void resetVisited(){
+        for(int i=0; i<n; i++){
+            Arrays.fill(visited[i],false);
+        }
+    }
 }
