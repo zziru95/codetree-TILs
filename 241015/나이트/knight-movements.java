@@ -16,10 +16,10 @@ public class Main {
         arr = new int[n][n];
         visited = new boolean[n][n];
         st = new StringTokenizer(br.readLine());
-        start[0] = Integer.parseInt(st.nextToken());
-        start[1] = Integer.parseInt(st.nextToken());
-        end[0] = Integer.parseInt(st.nextToken());
-        end[1] = Integer.parseInt(st.nextToken());
+        start[0] = Integer.parseInt(st.nextToken())-1;
+        start[1] = Integer.parseInt(st.nextToken())-1;
+        end[0] = Integer.parseInt(st.nextToken())-1;
+        end[1] = Integer.parseInt(st.nextToken())-1;
         System.out.print(bfs());
     }
 
