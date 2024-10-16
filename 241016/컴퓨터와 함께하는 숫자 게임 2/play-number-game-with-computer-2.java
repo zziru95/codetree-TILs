@@ -2,25 +2,25 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static long m;          // m은 최대 10^18이므로 long 사용
-    static int a, b;        // a, b는 최대 10^5 범위 내 차이를 가지므로 int 사용
-    static int maxT = 0;
-    static int minT = Integer.MAX_VALUE;
+    static long m;
+    static long a, b;
+    static long maxT = 0;
+    static long minT = Long.MAX_VALUE; // Integer.MAX_VALUE -> Long.MAX_VALUE로 변경
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         // 첫 번째 입력: m
         StringTokenizer st = new StringTokenizer(br.readLine());
-        m = Long.parseLong(st.nextToken());  // m을 long으로 입력 받기
+        m = Long.parseLong(st.nextToken()); // m을 long으로 입력 받기
 
         // 두 번째 입력: a, b
         st = new StringTokenizer(br.readLine());
-        a = Integer.parseInt(st.nextToken());  // a를 int로 입력 받기
-        b = Integer.parseInt(st.nextToken());  // b를 int로 입력 받기
+        a = Long.parseLong(st.nextToken()); // a를 long으로 입력 받기
+        b = Long.parseLong(st.nextToken()); // b를 long으로 입력 받기
 
         // a에서 b까지 모든 숫자에 대해 baseball 함수 호출
-        for (int i = a; i <= b; i++) {
+        for (long i = a; i <= b; i++) {
             baseball(i);
         }
 
@@ -28,10 +28,10 @@ public class Main {
         System.out.print(minT + " " + maxT);
     }
 
-    public static void baseball(int num) {
-        long left = 1;         // 이진 탐색에 필요한 변수는 long으로 처리
+    public static void baseball(long num) {
+        long left = 1;
         long right = m;
-        int cnt = 1;           // 카운트는 범위가 작으므로 int로 처리
+        long cnt = 1; // 카운트도 long으로 처리
 
         // 이진 탐색 수행
         while (left <= right) {
