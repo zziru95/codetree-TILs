@@ -49,7 +49,7 @@ public class Main  {
 
         StringBuilder sb =new StringBuilder();
         for(int i=1; i<n+1; i++){
-            sb.append(dist[i]);
+            sb.append((dist[i] != (int) 1e9) ? dist[i] : -1);
             if(i<n) sb.append('\n');
         }
 
