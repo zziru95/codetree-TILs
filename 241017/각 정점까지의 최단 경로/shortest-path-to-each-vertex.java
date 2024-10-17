@@ -2,7 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class Main  {
-    static class Pair implements Comparable<Pair>{
+    static class Pair {
         int to;
         int w;
 
@@ -11,10 +11,6 @@ public class Main  {
             this.w = w;
         }
 
-        @Override
-        public int compareTo(Pair o){
-            return this.w - o.w;
-        }
     }
 
 
@@ -61,7 +57,7 @@ public class Main  {
     public static int[] dijk(int start){
         int[] dist = new int[n+1];
         Arrays.fill(dist, (int) 1e9);
-        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        PriorityQueue<Pair> pq = new PriorityQueue<>((o1,o2) -> o1.w-o2.w);
         pq.add(new Pair(start, 0));
         dist[start] = 0;
 
