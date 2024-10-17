@@ -1,116 +1,139 @@
 import java.util.*;
+import java.io.*;
 
-// 그래프의 최대 노드 수를 1005로 설정
 public class Main {
-    static int n, m;
-    static int S, E;
-    static List<Pair>[] graph = new ArrayList[1005]; // 그래프 인접 리스트
-    static int[] d = new int[1005]; // 최소 비용 저장 배열
-    static int[] pre = new int[1005]; // 이전 노드 추적용 배열
-
-    // 우선순위 큐: {가중치, 노드} 순으로 오름차순 정렬
-    static PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingInt(p -> p.weight));
-
-    // 간단한 가중치와 노드를 저장하기 위한 Pair 클래스
-    static class Pair {
-        int weight, node;
-
-        Pair(int weight, int node) {
+    static class Edge {
+        int to;
+        int weight;
+        public Edge(int to, int weight){
+            this.to = to;
             this.weight = weight;
-            this.node = node;
         }
     }
 
-    // 다익스트라 알고리즘 구현
-    static void dijkstra(int start) {
-        // 시작 노드의 최소 비용을 0으로 설정하고 큐에 추가
-        d[start] = 0;
-        pq.add(new Pair(0, start));
+    static class Node implements Comparable<Node> {
+        int id;
+        long distance;
+        List<Integer> path;
 
-        while (!pq.isEmpty()) {
-            Pair current = pq.poll(); // 큐에서 최솟값을 꺼냄
-            int curWeight = current.weight;
-            int curNode = current.node;
+        public Node(int id, long distance, List<Integer> path){
+            this.id = id;
+            this.distance = distance;
+            this.path = path;
+        }
 
-            // 이미 더 작은 비용이 있다면 무시
-            if (d[curNode] != curWeight) {
+        @Override
+        public int compareTo(Node other){
+            if(this.distance != other.distance){
+                return Long.compare(this.distance, other.distance);
+            }
+            // Compare paths lex order
+            int size1 = this.path.size();
+            int size2 = other.path.size();
+            int minSize = Math.min(size1, size2);
+            for(int i=0; i<minSize; i++){
+                if(!this.path.get(i).equals(other.path.get(i))){
+                    return this.path.get(i) - other.path.get(i);
+                }
+            }
+            return size1 - size2;
+        }
+    }
+
+    public static void main(String[] args) throws IOException{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken()); // number of nodes
+        int m = Integer.parseInt(st.nextToken()); // number of edges
+
+        // Initialize adjacency list
+        List<Edge>[] adj = new ArrayList[n+1];
+        for(int i=0; i<=n; i++) adj[i] = new ArrayList<>();
+
+        for(int i=0; i<m; i++){
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            int w = Integer.parseInt(st.nextToken());
+            adj[u].add(new Edge(v, w));
+            adj[v].add(new Edge(u, w));
+        }
+
+        // Read A and B
+        st = new StringTokenizer(br.readLine());
+        int A = Integer.parseInt(st.nextToken());
+        int B = Integer.parseInt(st.nextToken());
+
+        // Initialize distance array and path array
+        long[] dist = new long[n+1];
+        Arrays.fill(dist, Long.MAX_VALUE);
+        List<Integer>[] paths = new ArrayList[n+1];
+        for(int i=0; i<=n; i++) paths[i] = new ArrayList<>();
+
+        // Priority Queue
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+
+        // Initialize source
+        dist[A] = 0;
+        paths[A].add(A);
+        pq.add(new Node(A, 0, new ArrayList<>(paths[A])));
+
+        while(!pq.isEmpty()){
+            Node current = pq.poll();
+            int u = current.id;
+            long currentDist = current.distance;
+            List<Integer> currentPath = current.path;
+
+            // If we have already found a better path, skip
+            if(currentDist > dist[u]){
                 continue;
             }
 
-            // 현재 노드에서 인접한 노드들을 탐색
-            for (Pair neighbor : graph[curNode]) {
-                int nxtWeight = neighbor.weight;
-                int nxtNode = neighbor.node;
+            for(Edge edge : adj[u]){
+                int v = edge.to;
+                long newDist = currentDist + edge.weight;
 
-                int newWeight = curWeight + nxtWeight; // 새로운 비용 계산
-                int beforeWeight = d[nxtNode]; // 이전에 기록된 비용
-
-                // 비용이 더 작으면 갱신
-                if (newWeight < beforeWeight) {
-                    d[nxtNode] = newWeight;
-                    pq.add(new Pair(newWeight, nxtNode));
-                    pre[nxtNode] = curNode;
-                } 
-                // 비용이 같을 때, 더 작은 번호의 노드를 선택
-                else if (newWeight == beforeWeight) {
-                    if (pre[nxtNode] < curNode) {
-                        d[nxtNode] = newWeight;
-                        pq.add(new Pair(newWeight, nxtNode));
-                        pre[nxtNode] = curNode;
+                if(newDist < dist[v]){
+                    // Found a better path
+                    dist[v] = newDist;
+                    // Update path
+                    List<Integer> newPath = new ArrayList<>(currentPath);
+                    newPath.add(v);
+                    paths[v] = newPath;
+                    pq.add(new Node(v, newDist, newPath));
+                }
+                else if(newDist == dist[v]){
+                    // Check if the new path is lex smaller
+                    List<Integer> existingPath = paths[v];
+                    List<Integer> candidatePath = new ArrayList<>(currentPath);
+                    candidatePath.add(v);
+                    if(isLexSmaller(candidatePath, existingPath)){
+                        paths[v] = candidatePath;
+                        pq.add(new Node(v, newDist, candidatePath));
                     }
                 }
             }
         }
+
+        // Output
+        System.out.println(dist[B]);
+        List<Integer> resultPath = paths[B];
+        for(int i=0; i<resultPath.size(); i++){
+            System.out.print(resultPath.get(i));
+            if(i != resultPath.size()-1) System.out.print(" ");
+        }
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        // 노드 수와 간선 수 입력
-        n = sc.nextInt();
-        m = sc.nextInt();
-
-        // 그래프 초기화
-        for (int i = 0; i < 1005; i++) {
-            graph[i] = new ArrayList<>();
+    // Helper method to compare two paths lex order
+    private static boolean isLexSmaller(List<Integer> path1, List<Integer> path2){
+        int size1 = path1.size();
+        int size2 = path2.size();
+        int minSize = Math.min(size1, size2);
+        for(int i=0; i<minSize; i++){
+            if(path1.get(i) < path2.get(i)) return true;
+            if(path1.get(i) > path2.get(i)) return false;
         }
-
-        // 간선 입력
-        for (int i = 0; i < m; i++) {
-            int s = sc.nextInt();
-            int e = sc.nextInt();
-            int w = sc.nextInt();
-            graph[s].add(new Pair(w, e)); // {가중치, 노드} 순
-            graph[e].add(new Pair(w, s));
-        }
-
-        // 시작 노드와 종료 노드 입력
-        S = sc.nextInt();
-        E = sc.nextInt();
-
-        // 최소 비용 배열 초기화 (INT_MAX로 설정)
-        Arrays.fill(d, Integer.MAX_VALUE);
-
-        // 다익스트라 알고리즘 실행
-        dijkstra(S);
-
-        // 최소 비용 출력
-        System.out.println(d[E]);
-
-        // 경로를 역추적하여 출력
-        List<Integer> ans = new ArrayList<>();
-        ans.add(E);
-        int cur = E;
-        while (cur != S) {
-            int nxt = pre[cur];
-            ans.add(nxt);
-            cur = nxt;
-        }
-
-        // 경로를 올바른 순서로 출력
-        Collections.reverse(ans);
-        for (int i : ans) {
-            System.out.print(i + " ");
-        }
+        return size1 < size2;
     }
 }
