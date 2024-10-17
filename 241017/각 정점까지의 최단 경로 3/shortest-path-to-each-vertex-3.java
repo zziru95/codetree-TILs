@@ -40,7 +40,7 @@ public class Main {
 
         dijkstra(1);
         for(int i=2; i<=n; i++){
-            System.out.println(distance[i]);
+            System.out.println((distance[i] != Integer.MAX_VALUE) ? distance[i] : -1);
         }
     }
 
