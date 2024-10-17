@@ -56,7 +56,7 @@ public class Main {
             int weight = current.weight;
             if(weight> distance[now]) continue;
 
-            for(Edge to : graph.get(now)){
+            for(Edge to : graph.getOrDefault(now,new ArrayList<>();)){
                 int newDistance = weight+to.weight;
                 if(distance[to.next]>newDistance){
                     distance[to.next] = newDistance;
