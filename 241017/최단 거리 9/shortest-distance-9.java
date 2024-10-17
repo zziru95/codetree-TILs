@@ -46,6 +46,7 @@ public class Main {
             int e = Integer.parseInt(st.nextToken());
             int w = Integer.parseInt(st.nextToken());
             graph[e].add(new Pair(s,w));
+            graph[s].add(new Pair(e,w));
         }
         st = new StringTokenizer(br.readLine());
         start = Integer.parseInt(st.nextToken());
