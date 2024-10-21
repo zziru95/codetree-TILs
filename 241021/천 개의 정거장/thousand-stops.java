@@ -81,7 +81,7 @@ public class Main {
             int bus = curr.bus;
             int time = curr.time;
 
-            if(dist[now]< w) continue;
+            // if(dist[now]< w) continue;
             if(now == B) {
                 answer[0] = w;
                 answer[1] = time;
