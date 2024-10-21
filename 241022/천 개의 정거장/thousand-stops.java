@@ -4,10 +4,10 @@ import java.io.*;
 public class Main {
     static class Pair {
         int to;
-        int w;
+        long w;
         int bus;
         int time;
-        public Pair(int to, int w, int bus, int time){
+        public Pair(int to, long w, int bus, int time){
             this.to = to;
             this.w = w;
             this.bus = bus;
@@ -17,10 +17,10 @@ public class Main {
 
     static class Node{
         int to;
-        int w;
+        long w;
         int bus;
-        int time;
-        public Node(int to, int w, int bus, int time){
+        long time;
+        public Node(int to, long w, int bus, long time){
             this.to = to;
             this.w = w;
             this.bus = bus;
@@ -29,9 +29,9 @@ public class Main {
     }
 
     static class Cost{
-        int w;
-        int time;
-        public Cost(int w, int time){
+        long w;
+        long time;
+        public Cost(long w, long time){
             this.w = w;
             this.time = time;
         }
@@ -39,7 +39,7 @@ public class Main {
 
     static int A,B,N;
     static HashMap<Integer,ArrayList<Pair>> graph;
-    static int INF = (int)1e9;
+    static long INF = (long)1e11;
 
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
@@ -52,7 +52,7 @@ public class Main {
         
         for(int i=1; i<=N;i++){
             st = new StringTokenizer(br.readLine());
-            int price = Integer.parseInt(st.nextToken());
+            long price = Long.parseLong(st.nextToken());
             int stopCnt = Integer.parseInt(st.nextToken());
             int[] route = new int[stopCnt];
             st = new StringTokenizer(br.readLine());
@@ -67,18 +67,19 @@ public class Main {
             }
         }
 
-        int[] answer = dijk(A,B);
+        long[] answer = dijk(A,B);
         System.out.print(answer[0]+" "+answer[1]);
     }
 
 
-    public static int[] dijk(int A, int B){
-        int[] answer = new int[] {-1,-1};
-        PriorityQueue<Node> pq = new PriorityQueue<>((o1,o2)->  {
-            if(o1.w==o2.w){
-                return o1.time-o2.time;
-            }
-            return o1.w-o2.w;
+    public static long[] dijk(int A, int B){
+        long[] answer = new long[] {-1,-1};
+        PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {
+        int cmp = Long.compare(o1.w, o2.w);
+        if (cmp == 0) {
+            return Long.compare(o1.time, o2.time);
+        }
+        return cmp;
         });
         Cost[] dist = new Cost[1001];
         for (int i = 0; i < dist.length; i++) {
@@ -90,9 +91,9 @@ public class Main {
         while(!pq.isEmpty()){
             Node curr = pq.poll();
             int now = curr.to;
-            int w = curr.w;
+            long w = curr.w;
             int bus = curr.bus;
-            int time = curr.time;
+            long time = curr.time;
 
             if(compare(new Cost(w,time),dist[now])) continue;
             if(now == B) {
@@ -104,8 +105,8 @@ public class Main {
             for(Pair temp :graph.get(now)){
                 int next = temp.to;
                 int nextBus = temp.bus;
-                int newW = w;
-                int newTime = time + temp.time;
+                long newW = w;
+                long newTime = time + temp.time;
                 if(bus!=nextBus){
                     newW+=temp.w;
                 }
