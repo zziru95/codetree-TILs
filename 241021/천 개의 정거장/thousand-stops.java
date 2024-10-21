@@ -85,6 +85,7 @@ public class Main {
             if(now == B) {
                 answer[0] = w;
                 answer[1] = time;
+                break;
             }
             if(!graph.containsKey(now)) continue;
             for(Pair temp :graph.get(now)){
