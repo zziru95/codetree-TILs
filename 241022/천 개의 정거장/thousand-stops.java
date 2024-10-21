@@ -66,13 +66,6 @@ public class Main {
                 }
             }
         }
-        // for(int temp : graph.keySet()){
-        //     for(Pair temp2 : graph.get(temp)){
-        //         System.out.println(temp + " :" + temp2.to + " ," + temp2.time);
-        //     }
-        // }
-
-
 
         int[] answer = dijk(A,B);
         System.out.print(answer[0]+" "+answer[1]);
@@ -88,7 +81,9 @@ public class Main {
             return o1.w-o2.w;
         });
         Cost[] dist = new Cost[1001];
-        Arrays.fill(dist,new Cost(INF,INF));
+        for (int i = 0; i < dist.length; i++) {
+            dist[i] = new Cost(INF, INF);
+        }
         dist[A] = new Cost(0,0);
         pq.add(new Node(A,0,0,0));
 
