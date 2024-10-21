@@ -95,7 +95,7 @@ public class Main {
                 if(bus!=nextBus){
                     newW+=temp.w;
                 }
-                if(dist[next]> newW){
+                if(dist[next]> newW || dist[next] == newW){
                     dist[next] = newW;
                     pq.add(new Node(next,newW,nextBus,time+1));
                 }
