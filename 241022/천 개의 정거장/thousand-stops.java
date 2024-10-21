@@ -94,7 +94,7 @@ public class Main {
             int bus = curr.bus;
             int time = curr.time;
 
-            if(dist[now].w< w) continue;
+            if(compare(new Cost(w,time),dist[now])) continue;
             if(now == B) {
                 answer[0] = w;
                 answer[1] = time;
@@ -109,8 +109,9 @@ public class Main {
                 if(bus!=nextBus){
                     newW+=temp.w;
                 }
-                if(dist[next].w> newW || (dist[next].w == newW &&dist[next].time > newTime)){
-                    dist[next] = new Cost(newW,newTime);
+                Cost newCost = new Cost(newW,newTime);
+                if(compare(dist[next],newCost)){
+                    dist[next] = newCost;
                     pq.add(new Node(next,newW,nextBus,newTime));
                 }
             }
@@ -118,5 +119,9 @@ public class Main {
 
 
         return answer;
+    }
+
+    public static boolean compare(Cost o1, Cost o2) {
+        return o1.w > o2.w || (o1.w == o2.w && o1.time > o2.time);
     }
 }
