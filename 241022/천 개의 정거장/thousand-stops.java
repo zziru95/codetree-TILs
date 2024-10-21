@@ -59,12 +59,15 @@ public class Main {
             for(int j=0;j<stopCnt;j++) {
                 route[j] = Integer.parseInt(st.nextToken());
             }
-            for(int j=0; j<stopCnt-1;j++){
-                for(int k=j+1; k<stopCnt;k++){
-                    graph.putIfAbsent(route[j],new ArrayList<>());
-                    graph.get(route[j]).add(new Pair(route[k],price,i,k-j));
+            for(int j = 0; j < stopCnt - 1; j++){
+                long cumulativeTime = 0;
+                for(int k = j + 1; k < stopCnt; k++){
+                    cumulativeTime += 1; // 각 정류장 간 시간 (1로 가정)
+                    graph.putIfAbsent(route[j], new ArrayList<>());
+                    graph.get(route[j]).add(new Pair(route[k], price, i, (int)cumulativeTime));
                 }
             }
+
         }
 
         long[] answer = dijk(A,B);
