@@ -62,7 +62,7 @@ public class Main {
             for(int j=0; j<stopCnt-1;j++){
                 for(int k=j+1; k<stopCnt;k++){
                     graph.putIfAbsent(route[j],new ArrayList<>());
-                    graph.get(route[j]).add(new Pair(k+1,price,i,k-j));
+                    graph.get(route[j]).add(new Pair(route[k],price,i,k-j));
                 }
             }
         }
