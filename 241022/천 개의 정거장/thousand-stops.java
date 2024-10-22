@@ -38,14 +38,17 @@ public class Main {
     }
 
     static int A,B,N;
-    static HashMap<Integer,ArrayList<Pair>> graph;
+    static ArrayList<Pair>[] graph;
     static long INF = (long)1e11;
 
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        graph = new HashMap<>();
+        graph = new ArrayList[1001];
+        for(int i=0; i<1001; i++){
+            graph[i] = new ArrayList<>();
+        }
         A = Integer.parseInt(st.nextToken());
         B = Integer.parseInt(st.nextToken());
         N= Integer.parseInt(st.nextToken());
@@ -63,8 +66,8 @@ public class Main {
                 long cumulativeTime = 0;
                 for(int k = j + 1; k < stopCnt; k++){
                     cumulativeTime += 1; // 각 정류장 간 시간 (1로 가정)
-                    graph.putIfAbsent(route[j], new ArrayList<>());
-                    graph.get(route[j]).add(new Pair(route[k], price, i, (int)cumulativeTime));
+                    
+                    graph[route[j]].add(new Pair(route[k], price, i, (int)cumulativeTime));
                 }
             }
 
@@ -104,8 +107,7 @@ public class Main {
                 answer[1] = time;
                 break;
             }
-            if(!graph.containsKey(now)) continue;
-            for(Pair temp :graph.get(now)){
+            for(Pair temp :graph[now]){
                 int next = temp.to;
                 int nextBus = temp.bus;
                 long newW = w;
