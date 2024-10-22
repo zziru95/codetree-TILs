@@ -40,12 +40,14 @@ public class Main {
     static int A, B, N;
     static ArrayList<Pair>[] graph;
     static long INF = (long) 1e11;
+    static HashMap<String, Pair> edgeMap;  // 간선 중복 방지를 위한 HashMap
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
         graph = new ArrayList[1001];
+        edgeMap = new HashMap<>();  // 간선 관리용 Map 초기화
         for (int i = 0; i < 1001; i++) {
             graph[i] = new ArrayList<>();
         }
@@ -65,11 +67,11 @@ public class Main {
                 route[j] = Integer.parseInt(st.nextToken());
             }
 
-            // 중복된 간선 처리: 최소 가중치만 유지
+            // 간선 추가
             for (int j = 0; j < stopCnt - 1; j++) {
                 long cumulativeTime = 0;
                 for (int k = j + 1; k < stopCnt; k++) {
-                    cumulativeTime += 1; // 각 정류장 간 시간 (1로 가정)
+                    cumulativeTime += 1;  // 각 정류장 간 시간 (1로 가정)
 
                     Pair newPair = new Pair(route[k], price, i, (int) cumulativeTime);
                     addEdge(route[j], newPair);  // 간선 추가 함수 호출
@@ -81,17 +83,17 @@ public class Main {
         System.out.print(answer[0] + " " + answer[1]);
     }
 
-    // 간선을 추가할 때 중복된 간선을 더 작은 가중치로 덮어쓰기
+    // HashMap을 이용한 간선 추가 및 갱신
     public static void addEdge(int from, Pair newPair) {
-        for (Pair existing : graph[from]) {
-            if (existing.to == newPair.to && existing.bus == newPair.bus) {
-                if (existing.w <= newPair.w) return;  // 기존 가중치가 더 작거나 같으면 추가하지 않음
-                existing.w = newPair.w;  // 더 작은 가중치로 갱신
-                existing.time = newPair.time;
-                return;
-            }
+        String key = from + "-" + newPair.to + "-" + newPair.bus;  // 고유 키 생성
+
+        if (edgeMap.containsKey(key)) {
+            Pair existing = edgeMap.get(key);
+            if (existing.w <= newPair.w) return;  // 기존 가중치가 더 작으면 갱신 안 함
         }
-        graph[from].add(newPair);  // 새로운 간선 추가
+
+        edgeMap.put(key, newPair);  // 간선 추가 또는 갱신
+        graph[from].add(newPair);
     }
 
     public static long[] dijk(int A, int B) {
