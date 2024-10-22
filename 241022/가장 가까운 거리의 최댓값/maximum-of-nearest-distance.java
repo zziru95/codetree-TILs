@@ -14,7 +14,6 @@ public class Main {
     static int maxD = -1;
     static ArrayList<Pair>[] graph;
     static Set<Integer> points;
-    static int[] dist;
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,7 +23,6 @@ public class Main {
         m = Integer.parseInt(st.nextToken());
         st = new StringTokenizer(br.readLine());
         graph = new ArrayList[n+1];
-        dist = new int[n+1];
         for(int i=0; i<n+1;i++){
             graph[i] = new ArrayList<>();
         }
@@ -32,10 +30,7 @@ public class Main {
         a = Integer.parseInt(st.nextToken());
         b = Integer.parseInt(st.nextToken());
         c = Integer.parseInt(st.nextToken());
-        points = new HashSet<>();
-        points.add(a);
-        points.add(b);
-        points.add(c);
+
 
         for(int i=0; i<m;i++){
             st = new StringTokenizer(br.readLine());
@@ -45,18 +40,21 @@ public class Main {
             graph[s].add(new Pair(e,w));
             graph[e].add(new Pair(s,w));
         }
-
+        int[] aDist = dijk(a);
+        int[] bDist = dijk(b);
+        int[] cDist = dijk(c);
+        
         for(int i=1; i<=n; i++){
-            if(points.contains(i)) continue;
-            if(graph[i].size()==0) continue;
-            dijk(i);
+            maxD = Math.max(maxD,Math.min(aDist[i],Math.min(bDist[i],cDist[i])));
         }
+
         System.out.print(maxD);
     }
 
 
 
-    public static void dijk(int start){
+    public static int[] dijk(int start){
+        int[] dist = new int[n+1];
         Arrays.fill(dist,INF);
         dist[start] = 0;
 
@@ -69,12 +67,6 @@ public class Main {
             int now = curr.to;
             int w = curr.w;
             if(dist[now]> w) continue;
-            if(now ==a || now ==b || now ==c){
-                minD = w;
-                break;
-            } 
-
-
             for(Pair temp : graph[now]){
                 int next = temp.to;
                 int newW = w+ temp.w;
@@ -84,7 +76,6 @@ public class Main {
                 }
             }
         }
-        maxD = Math.max(minD,maxD);
-
+        return dist;
     }
 }
