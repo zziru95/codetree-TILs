@@ -59,27 +59,20 @@ public class Main {
     public static void dijk(int start){
         Arrays.fill(dist,INF);
         dist[start] = 0;
-        boolean aCheck = false;
-        boolean bCheck = false;
-        boolean cCheck = false;
+
         PriorityQueue<Pair> pq = new PriorityQueue<>((o1,o2)-> o1.w-o2.w);
         pq.add(new Pair(start,0));
         int minD = INF;
 
-        while(!pq.isEmpty() || !(aCheck||bCheck||cCheck)){
+        while(!pq.isEmpty()){
             Pair curr = pq.poll();
             int now = curr.to;
             int w = curr.w;
             if(dist[now]> w) continue;
-            if(now ==a) {
-                aCheck = true;
-            }
-            if(now ==b) {
-                bCheck = true;
-            }
-            if(now ==c) {
-                cCheck = true;
-            }
+            if(now ==a || now ==b || now ==c){
+                minD = w;
+                break;
+            } 
 
 
             for(Pair temp : graph[now]){
@@ -91,11 +84,6 @@ public class Main {
                 }
             }
         }
-
-
-        minD = Math.min(minD,dist[a]);
-        minD = Math.min(minD,dist[b]);
-        minD = Math.min(minD,dist[c]);
         maxD = Math.max(minD,maxD);
 
     }
