@@ -40,12 +40,11 @@ public class Main {
             graph[s].add(new Pair(e,w));
             graph[e].add(new Pair(s,w));
         }
-        int[] aDist = dijk(a);
-        int[] bDist = dijk(b);
-        int[] cDist = dijk(c);
+
+        int[] dist = dijk();
         
         for(int i=1; i<=n; i++){
-            maxD = Math.max(maxD,Math.min(aDist[i],Math.min(bDist[i],cDist[i])));
+            maxD = Math.max(maxD,dist[i]);
         }
 
         System.out.print(maxD);
@@ -53,13 +52,18 @@ public class Main {
 
 
 
-    public static int[] dijk(int start){
+    public static int[] dijk(){
         int[] dist = new int[n+1];
         Arrays.fill(dist,INF);
-        dist[start] = 0;
+        dist[a] = 0;
+        dist[b] = 0;
+        dist[c] = 0;
 
         PriorityQueue<Pair> pq = new PriorityQueue<>((o1,o2)-> o1.w-o2.w);
-        pq.add(new Pair(start,0));
+        pq.add(new Pair(a,0));
+        pq.add(new Pair(b,0));
+        pq.add(new Pair(c,0));
+
         int minD = INF;
 
         while(!pq.isEmpty()){
