@@ -66,7 +66,7 @@ public class Main {
         pq.add(new Pair(start,0));
         int minD = INF;
 
-        while(!pq.isEmpty() || !(aCheck&&bCheck&&cCheck)){
+        while(!pq.isEmpty() || !(aCheck||bCheck||cCheck)){
             Pair curr = pq.poll();
             int now = curr.to;
             int w = curr.w;
