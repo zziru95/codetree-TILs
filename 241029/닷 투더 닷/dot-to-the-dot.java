@@ -1,92 +1,101 @@
-import java.io.*;
 import java.util.*;
-
-class Path {
-	int node, l, c;
-	
-	public Path(int node, int l, int c) {
-		this.node = node;
-		this.l = l;
-		this.c = c;
-	}
-}
-
-class Route implements Comparable<Route> {
-	int node, b, a, x;
-	
-	public Route(int node, int b, int a, int x) {
-		this.node = node;
-		this.b = b;
-		this.a = a;
-		this.x = x;
-	}
-	
-	@Override
-	public int compareTo(Route o) {
-		double subject = b + (double) x / a;
-		double object = o.b + (double) o.x / o.a;
-		
-		if (subject > object) return 1;
-		else if (subject == object) return 0;
-		else return -1;
-	}
-}
+import java.io.*;
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		int n = Integer.parseInt(st.nextToken());
-		int m = Integer.parseInt(st.nextToken());
-		int x = Integer.parseInt(st.nextToken());
-		
-		ArrayList<Path>[] graph = new ArrayList[n];
-		for (int idx = 0; idx < n; idx++) {
-			graph[idx] = new ArrayList<>();
-		}
-		
-		for (int idx = 0; idx < m; idx++) {
-			st = new StringTokenizer(br.readLine());
-			int node1 = Integer.parseInt(st.nextToken()) - 1;
-			int node2 = Integer.parseInt(st.nextToken()) - 1;
-			int l = Integer.parseInt(st.nextToken());
-			int c = Integer.parseInt(st.nextToken());
-			
-			graph[node1].add(new Path(node2, l, c));
-			graph[node2].add(new Path(node1, l, c));
-		}
-		
-		double[] minDistance = new double[n];
-		Arrays.fill(minDistance, -1);
-		
-		PriorityQueue<Route> pq = new PriorityQueue<>();
-		pq.add(new Route(0, 0, 500, x));
-		minDistance[0] = 0;
-		
-		while (!pq.isEmpty()) {
-			Route currentRoute = pq.poll();
-			int currentNode = currentRoute.node;
-			int currentB = currentRoute.b;
-			int currentA = currentRoute.a;
-			
-			for (Path path : graph[currentNode]) {
-				int nextNode = path.node;
-				int nextL = path.l;
-				int nextC = path.c;
-				
-				int nextB = currentB + nextL;
-				int nextA = Math.min(currentA, nextC);
-				double nextDistance = nextB + (double) x / nextA;
-				if (minDistance[nextNode] == -1 || minDistance[nextNode] >= nextDistance) {
-					minDistance[nextNode] = nextDistance;
-					pq.add(new Route(nextNode, nextB, nextA, x));
-				}
-			}
-		}
-		
-		System.out.println((int) minDistance[n - 1]);
-	}
-	
+    static class Node{
+        int to;
+        double L,C;
+
+        public Node(int to, double L, double C){
+            this.to = to;
+            this.L = L;
+            this.C = C;
+        }
+    }
+
+    static class Pair implements Comparable<Pair>{
+        int to;
+        double A,B,W;
+
+        public Pair(int to, double A, double B){
+            this.to = to;
+            this.A = A;
+            this.B = B;
+            this.W = B + X/A;
+        }
+        public Pair(int to, double A, double B, double W){
+            this.to = to;
+            this.A = A;
+            this.B = B;
+            this.W = W;
+        }
+
+        public int compareTo(Pair o){
+            return Double.compare(this.W, o.W);
+        }
+    }
+
+    static int N,M;
+    static double X;
+    static double INF = Double.MAX_VALUE;
+    static ArrayList<Node>[] graph;
+
+
+    public static void main(String[] args) throws IOException {
+        // 여기에 코드를 작성해주세요.
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        X = Double.parseDouble(st.nextToken());
+        graph = new ArrayList[N+1];
+        for(int i=0; i<=N; i++){
+            graph[i] = new ArrayList<>();
+        }
+
+        for(int i=0; i<M; i++){
+            st = new StringTokenizer(br.readLine());
+            int now = Integer.parseInt(st.nextToken());
+            int next = Integer.parseInt(st.nextToken());
+            double L = Double.parseDouble(st.nextToken());
+            double C = Double.parseDouble(st.nextToken());
+            graph[now].add(new Node(next,L,C));
+            graph[next].add(new Node(now,L,C));
+        }
+
+        dijk();
+    }
+
+
+    public static void dijk(){
+        double[] dist = new double[N+1];
+        Arrays.fill(dist,INF);
+        dist[1] = 0.0;
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        pq.add(new Pair(1,INF,0,0));
+        while(!pq.isEmpty()){
+            Pair curr = pq.poll();
+            int now = curr.to;
+            double A = curr.A;
+            double B = curr.B;
+            double W = curr.W;
+            
+            if(dist[now]<W) continue;
+            for(Node temp : graph[now]){
+                int next = temp.to;
+                double L = temp.L;
+                double C = temp.C;
+                Pair nextPair = new Pair(next,Math.min(C,A),B+L);
+                if(dist[next]>= nextPair.W){
+                    dist[next] = nextPair.W;
+                    pq.add(nextPair);
+                }
+            }
+        }
+
+        System.out.printf("%.0f", dist[N]);
+        
+    }
 }
