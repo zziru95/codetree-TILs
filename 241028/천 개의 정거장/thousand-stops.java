@@ -70,6 +70,7 @@ public class Main {
 
         long[] minFare = new long[1001];
         long[] minTime = new long[1001];
+        boolean[] visited = new boolean[1001];  // 노드 방문 여부를 기록합니다.
         Arrays.fill(minFare, INF);
         Arrays.fill(minTime, INF);
 
@@ -80,15 +81,16 @@ public class Main {
         while (!pq.isEmpty()) {
             Edge curr = pq.poll();
 
-            if (curr.to == end) {
-                return new long[]{minFare[end], minTime[end]};
-            }
+            // 이미 방문한 노드는 무시합니다.
+            if (visited[curr.to]) continue;
+            visited[curr.to] = true;
 
             // 현재 노드에서 연결된 간선 탐색
             for (Edge next : graph[curr.to]) {
                 long newFare = minFare[curr.to] + next.fare;
                 int newTime = (int) (minTime[curr.to] + next.time);
 
+                // 더 나은 경로를 찾은 경우 갱신
                 if (newFare < minFare[next.to] || 
                     (newFare == minFare[next.to] && newTime < minTime[next.to])) {
                     minFare[next.to] = newFare;
@@ -98,7 +100,11 @@ public class Main {
             }
         }
 
-        // 경로가 없을 때
-        return new long[]{-1, -1};
+        // 도착 지점에 도달할 수 없는 경우
+        if (minFare[end] == INF) {
+            return new long[]{-1, -1};
+        }
+
+        return new long[]{minFare[end], minTime[end]};
     }
 }
