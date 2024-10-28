@@ -2,109 +2,137 @@ import java.util.*;
 import java.io.*;
 
 public class Main {
-    static class Edge {
+    static class Pair {
         int to;
-        long fare;
-        int time;
+        long w;
+        int bus;
+        long time; // int에서 long으로 변경
 
-        public Edge(int to, long fare, int time) {
+        public Pair(int to, long w, int bus, long time) {
             this.to = to;
-            this.fare = fare;
+            this.w = w;
+            this.bus = bus;
+            this.time = time;
+        }
+    }
+
+    static class Node {
+        int to;
+        long w;
+        int bus;
+        long time;
+
+        public Node(int to, long w, int bus, long time) {
+            this.to = to;
+            this.w = w;
+            this.bus = bus;
+            this.time = time;
+        }
+    }
+
+    static class Cost {
+        long w;
+        long time;
+
+        public Cost(long w, long time) {
+            this.w = w;
             this.time = time;
         }
     }
 
     static int A, B, N;
-    static final long INF = Long.MAX_VALUE;
-    static List<Edge>[] graph;
+    static HashMap<Integer, Pair>[] graph;
+    static long INF = (long) 1e11;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
+        graph = new HashMap[1001];
+        for (int i = 0; i < 1001; i++) {
+            graph[i] = new HashMap<>();
+        }
+
         A = Integer.parseInt(st.nextToken());
         B = Integer.parseInt(st.nextToken());
         N = Integer.parseInt(st.nextToken());
 
-        // 인접 리스트 초기화
-        graph = new ArrayList[1001];
-        for (int i = 0; i <= 1000; i++) {
-            graph[i] = new ArrayList<>();
-        }
-
-        // 각 버스의 노선 입력 처리
-        for (int i = 0; i < N; i++) {
+        for (int i = 1; i <= N; i++) {
             st = new StringTokenizer(br.readLine());
-            long fare = Long.parseLong(st.nextToken());
-            int stopCount = Integer.parseInt(st.nextToken());
+            long price = Long.parseLong(st.nextToken());
+            int stopCnt = Integer.parseInt(st.nextToken());
+            int[] route = new int[stopCnt];
 
-            int[] route = new int[stopCount];
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < stopCount; j++) {
+            for (int j = 0; j < stopCnt; j++) {
                 route[j] = Integer.parseInt(st.nextToken());
             }
 
-            // 노선 연결 정보 추가 (인접 리스트에 저장)
-            for (int j = 0; j < stopCount - 1; j++) {
-                for (int k = j + 1; k < stopCount; k++) {
-                    int from = route[j];
-                    int to = route[k];
-                    int travelTime = k - j;
-
-                    graph[from].add(new Edge(to, fare, travelTime));
+            for (int j = 0; j < stopCnt - 1; j++) {
+                long cumulativeTime = 0;
+                for (int k = j + 1; k < stopCnt; k++) {
+                    cumulativeTime += 1;
+                    updateGraph(route[j], route[k], price, cumulativeTime, i);
                 }
             }
         }
 
-        // 다익스트라 알고리즘 실행
-        long[] result = dijkstra(A, B);
-        System.out.println(result[0] + " " + result[1]);
+        long[] answer = dijk(A, B);
+        System.out.print(answer[0] + " " + answer[1]);
     }
 
-    // 다익스트라 알고리즘 구현
-    public static long[] dijkstra(int start, int end) {
-        PriorityQueue<Edge> pq = new PriorityQueue<>((a, b) -> {
-            if (a.fare == b.fare) return Integer.compare(a.time, b.time);
-            return Long.compare(a.fare, b.fare);
+    public static void updateGraph(int start, int to, long price, long time, int bus) {
+        if (!graph[start].containsKey(to) || graph[start].get(to).w > price || (graph[start].get(to).w == price && graph[start].get(to).time > time)) {
+            graph[start].put(to, new Pair(to, price, bus, time)); // 타입 캐스팅 제거
+        }
+    }
+
+    public static long[] dijk(int A, int B) {
+        long[] answer = new long[]{-1, -1};
+        PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {
+            int cmp = Long.compare(o1.w, o2.w);
+            if (cmp == 0) {
+                return Long.compare(o1.time, o2.time);
+            }
+            return cmp;
         });
 
-        long[] minFare = new long[1001];
-        long[] minTime = new long[1001];
-        boolean[] visited = new boolean[1001];  // 노드 방문 여부를 기록합니다.
-        Arrays.fill(minFare, INF);
-        Arrays.fill(minTime, INF);
+        Cost[] dist = new Cost[1001];
 
-        minFare[start] = 0;
-        minTime[start] = 0;
-        pq.add(new Edge(start, 0, 0));
+        for (int i = 0; i < dist.length; i++) {
+            dist[i] = new Cost(INF, INF);
+        }
+        dist[A] = new Cost(0, 0);
+        pq.add(new Node(A, 0, 0, 0));
 
         while (!pq.isEmpty()) {
-            Edge curr = pq.poll();
+            Node curr = pq.poll();
+            int now = curr.to;
 
-            // 이미 방문한 노드는 무시합니다.
-            if (visited[curr.to]) continue;
-            visited[curr.to] = true;
+            if (now == B) {
+                answer[0] = curr.w;
+                answer[1] = curr.time;
+                break;
+            }
 
-            // 현재 노드에서 연결된 간선 탐색
-            for (Edge next : graph[curr.to]) {
-                long newFare = minFare[curr.to] + next.fare;
-                int newTime = (int) (minTime[curr.to] + next.time);
+            for (Map.Entry<Integer, Pair> entry : graph[now].entrySet()) {
+                int next = entry.getKey();
+                Pair temp = entry.getValue();
 
-                // 더 나은 경로를 찾은 경우 갱신
-                if (newFare < minFare[next.to] || 
-                    (newFare == minFare[next.to] && newTime < minTime[next.to])) {
-                    minFare[next.to] = newFare;
-                    minTime[next.to] = newTime;
-                    pq.add(new Edge(next.to, newFare, newTime));
+                long newW = curr.w + temp.w;
+                long newTime = curr.time + temp.time;
+
+                if (compare(dist[next], new Cost(newW, newTime))) {
+                    dist[next] = new Cost(newW, newTime);
+                    pq.add(new Node(next, newW, temp.bus, newTime));
                 }
             }
         }
 
-        // 도착 지점에 도달할 수 없는 경우
-        if (minFare[end] == INF) {
-            return new long[]{-1, -1};
-        }
+        return answer;
+    }
 
-        return new long[]{minFare[end], minTime[end]};
+    public static boolean compare(Cost o1, Cost o2) {
+        return o1.w > o2.w || (o1.w == o2.w && o1.time > o2.time);
     }
 }
