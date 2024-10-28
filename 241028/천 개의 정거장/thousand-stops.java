@@ -134,7 +134,8 @@ public class Main {
         return answer;
     }
 
-    public static boolean compare(Cost o1, Cost o2) {
-        return o1.w > o2.w || (o1.w == o2.w && o1.time > o2.time);
+    public static boolean compare(Cost newCost, Cost oldCost) {
+        return newCost.w < oldCost.w || (newCost.w == oldCost.w && newCost.time < oldCost.time);
     }
+
 }
