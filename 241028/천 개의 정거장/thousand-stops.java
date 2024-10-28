@@ -98,7 +98,6 @@ public class Main {
         });
 
         Cost[] dist = new Cost[1001];
-        boolean[] visited = new boolean[1001]; // 방문 여부 체크
 
         for (int i = 0; i < dist.length; i++) {
             dist[i] = new Cost(INF, INF);
@@ -110,8 +109,7 @@ public class Main {
             Node curr = pq.poll();
             int now = curr.to;
 
-            if (visited[now]) continue; // 이미 방문한 정류장은 스킵
-            visited[now] = true;
+
 
             if (now == B) {
                 answer[0] = curr.w;
