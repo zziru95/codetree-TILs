@@ -67,7 +67,6 @@ public class Main {
                 for(int k = j + 1; k < stopCnt; k++){
                     cumulativeTime += 1; // 각 정류장 간 시간 (1로 가정)
                     if(check(route[j],route[k],price,cumulativeTime)){
-                        if(graph[route[j]].size()>0) graph[route[j]].remove(0);
                         graph[route[j]].add(new Pair(route[k], price, i, (int)cumulativeTime));
                     }
                 }
@@ -133,10 +132,15 @@ public class Main {
         return o1.w > o2.w || (o1.w == o2.w && o1.time > o2.time);
     }
 
-    public static boolean check(int start,int to, long price, long time){
-        for(Pair temp : graph[start]){
-            if(temp.to != to) continue;
-            if(temp.w < price || (temp.w == price && temp.time <time)) return false;
+    public static boolean check(int start, int to, long price, long time) {
+        for (int i = graph[start].size() - 1; i >= 0; i--) {  // 뒤에서부터 순회
+            Pair temp = graph[start].get(i);
+            if (temp.to != to) continue;  // 목적지가 다르면 넘어감
+            if (temp.w < price || (temp.w == price && temp.time < time)) {
+                // 조건 만족 시 삭제
+                return false;
+            }
+            graph[start].remove(i);
         }
         return true;
     }
