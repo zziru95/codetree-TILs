@@ -42,7 +42,7 @@ public class Main {
 
     static int A, B, N;
     static ArrayList<Pair>[] graph;
-    static long INF = (long) 1e11;
+    static long INF = Long.MAX_VALUE;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
