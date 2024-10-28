@@ -67,6 +67,7 @@ public class Main {
                 for(int k = j + 1; k < stopCnt; k++){
                     cumulativeTime += 1; // 각 정류장 간 시간 (1로 가정)
                     if(check(route[j],route[k],price,cumulativeTime)){
+                        if(graph[route[j]].size()>0) graph.[route[j]].clear();
                         graph[route[j]].add(new Pair(route[k], price, i, (int)cumulativeTime));
                     }
                 }
