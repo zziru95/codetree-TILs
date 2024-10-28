@@ -94,8 +94,8 @@ public class Main {
                 }
             }
         }
-
-        System.out.printf("%.0f", dist[N]);
+        double result = Math.floor(dist[N]*10)/10;
+        System.out.print((int) result);
         
     }
 }
