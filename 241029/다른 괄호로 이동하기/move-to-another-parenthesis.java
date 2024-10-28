@@ -3,6 +3,19 @@ import java.io.*;
 
 
 public class Main {
+    static class Node implements Comparable<Node>{
+        int r,c,w;
+
+        public Node(int r, int c ,int w){
+            this.r = r;
+            this.c = c;
+            this.w = w;
+        }
+
+        public int compareTo(Node o){
+            return this.w-o.w;
+        }
+    }
 
     static int N, A, B;
     static char[][] graph;
@@ -49,20 +62,20 @@ public class Main {
 
 
     public static void dijk(int row, int col){
-        int[] start =  {row,col,0};
+        Node start =  new Node(row,col,0);
         for(int i=0; i<N;i++){
             Arrays.fill(dist[i],INF);
         }
 
-        PriorityQueue<int[]> pq = new PriorityQueue<>((o1,o2)-> o1[2]-o2[2]);
+        PriorityQueue<Node> pq = new PriorityQueue<>();
         pq.add(start);
         dist[row][col] = 0;
 
         while(!pq.isEmpty()){
-            int[] now = pq.poll();
-            int r = now[0];
-            int c = now[1];
-            int w = now[2];
+            Node now = pq.poll();
+            int r = now.r;
+            int c = now.c;
+            int w = now.w;
 
             if(dist[r][c]<w) continue;
             
@@ -78,7 +91,7 @@ public class Main {
                     }
                     if(dist[nr][nc]>newW){
                         dist[nr][nc] = newW;
-                        pq.add(new int[]{nr,nc,newW});
+                        pq.add(new Node(nr,nc,newW));
                     }
                 }
                 
