@@ -6,7 +6,7 @@ public class Main {
         int to;
         long w;
         int bus;
-        long time;
+        long time; //  long으로 변경
 
         public Pair(int to, long w, int bus, long time) {
             this.to = to;
@@ -41,16 +41,16 @@ public class Main {
     }
 
     static int A, B, N;
-    static ArrayList<Pair>[] graph;
+    static HashMap<Integer, Pair>[] graph;
     static long INF = Long.MAX_VALUE;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        graph = new ArrayList[1001];
+        graph = new HashMap[1001];
         for (int i = 0; i < 1001; i++) {
-            graph[i] = new ArrayList<>();
+            graph[i] = new HashMap<>();
         }
 
         A = Integer.parseInt(st.nextToken());
@@ -73,7 +73,6 @@ public class Main {
                 for (int k = j + 1; k < stopCnt; k++) {
                     cumulativeTime += 1;
                     updateGraph(route[j], route[k], price, cumulativeTime, i);
-
                 }
             }
         }
@@ -83,7 +82,9 @@ public class Main {
     }
 
     public static void updateGraph(int start, int to, long price, long time, int bus) {
-        graph[start].add(new Pair(to, price, bus, time)); // 간선을 추가하도록 수정
+        if (!graph[start].containsKey(to) || graph[start].get(to).w > price || (graph[start].get(to).w == price && graph[start].get(to).time > time)) {
+            graph[start].put(to, new Pair(to, price, bus, time)); 
+        }
     }
 
     public static long[] dijk(int A, int B) {
@@ -108,19 +109,15 @@ public class Main {
             Node curr = pq.poll();
             int now = curr.to;
 
-            // 이미 더 좋은 경로로 방문한 경우 건너뜁니다.
-            if (compare(dist[now], new Cost(curr.w, curr.time))) {
-                continue;
-            }
-
             if (now == B) {
                 answer[0] = curr.w;
                 answer[1] = curr.time;
                 break;
             }
 
-            for (Pair temp : graph[now]) {
-                int next = temp.to;
+            for (Map.Entry<Integer, Pair> entry : graph[now].entrySet()) {
+                int next = entry.getKey();
+                Pair temp = entry.getValue();
 
                 long newW = curr.w + temp.w;
                 long newTime = curr.time + temp.time;
