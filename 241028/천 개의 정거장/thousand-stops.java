@@ -7,6 +7,7 @@ public class Main {
         long w;
         int bus;
         int time;
+
         public Pair(int to, long w, int bus, int time) {
             this.to = to;
             this.w = w;
@@ -20,6 +21,7 @@ public class Main {
         long w;
         int bus;
         long time;
+
         public Node(int to, long w, int bus, long time) {
             this.to = to;
             this.w = w;
@@ -31,6 +33,7 @@ public class Main {
     static class Cost {
         long w;
         long time;
+
         public Cost(long w, long time) {
             this.w = w;
             this.time = time;
@@ -38,15 +41,16 @@ public class Main {
     }
 
     static int A, B, N;
-    static ArrayList<HashMap<Integer, Pair>>[] graph;
+    static HashMap<Integer, Pair>[] graph;
     static long INF = (long) 1e11;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        graph = new ArrayList[1001];  // 각 정류장에 대한 ArrayList 초기화
+
+        graph = new HashMap[1001];
         for (int i = 0; i < 1001; i++) {
-            graph[i] = new ArrayList<>();  // 각 정류장에 ArrayList 생성
+            graph[i] = new HashMap<>();
         }
 
         A = Integer.parseInt(st.nextToken());
@@ -67,12 +71,8 @@ public class Main {
             for (int j = 0; j < stopCnt - 1; j++) {
                 long cumulativeTime = 0;
                 for (int k = j + 1; k < stopCnt; k++) {
-                    cumulativeTime += 1;  // 각 정류장 간 시간 (1로 가정)
-                    if (check(route[j], route[k], price, cumulativeTime)) {
-                        HashMap<Integer, Pair> map = new HashMap<>();
-                        map.put(route[k], new Pair(route[k], price, i, (int) cumulativeTime));
-                        graph[route[j]].add(map);  // 그래프에 경로 추가
-                    }
+                    cumulativeTime += 1;
+                    updateGraph(route[j], route[k], price, cumulativeTime, i);
                 }
             }
         }
@@ -81,8 +81,14 @@ public class Main {
         System.out.print(answer[0] + " " + answer[1]);
     }
 
+    public static void updateGraph(int start, int to, long price, long time, int bus) {
+        if (!graph[start].containsKey(to) || graph[start].get(to).w > price) {
+            graph[start].put(to, new Pair(to, price, bus, (int) time));
+        }
+    }
+
     public static long[] dijk(int A, int B) {
-        long[] answer = new long[] { -1, -1 };
+        long[] answer = new long[]{-1, -1};
         PriorityQueue<Node> pq = new PriorityQueue<>((o1, o2) -> {
             int cmp = Long.compare(o1.w, o2.w);
             if (cmp == 0) {
@@ -92,6 +98,8 @@ public class Main {
         });
 
         Cost[] dist = new Cost[1001];
+        boolean[] visited = new boolean[1001]; // 방문 여부 체크
+
         for (int i = 0; i < dist.length; i++) {
             dist[i] = new Cost(INF, INF);
         }
@@ -101,31 +109,26 @@ public class Main {
         while (!pq.isEmpty()) {
             Node curr = pq.poll();
             int now = curr.to;
-            long w = curr.w;
-            int bus = curr.bus;
-            long time = curr.time;
 
-            if (compare(new Cost(w, time), dist[now])) continue;
+            if (visited[now]) continue; // 이미 방문한 정류장은 스킵
+            visited[now] = true;
+
             if (now == B) {
-                answer[0] = w;
-                answer[1] = time;
+                answer[0] = curr.w;
+                answer[1] = curr.time;
                 break;
             }
 
-            for (HashMap<Integer, Pair> map : graph[now]) {
-                for (Map.Entry<Integer, Pair> entry : map.entrySet()) {
-                    int next = entry.getKey();
-                    Pair temp = entry.getValue();
-                    int nextBus = temp.bus;
-                    long newW = w;
-                    long newTime = time + temp.time;
-                    newW += temp.w;
+            for (Map.Entry<Integer, Pair> entry : graph[now].entrySet()) {
+                int next = entry.getKey();
+                Pair temp = entry.getValue();
 
-                    Cost newCost = new Cost(newW, newTime);
-                    if (compare(dist[next], newCost)) {
-                        dist[next] = newCost;
-                        pq.add(new Node(next, newW, nextBus, newTime));
-                    }
+                long newW = curr.w + temp.w;
+                long newTime = curr.time + temp.time;
+
+                if (compare(dist[next], new Cost(newW, newTime))) {
+                    dist[next] = new Cost(newW, newTime);
+                    pq.add(new Node(next, newW, temp.bus, newTime));
                 }
             }
         }
@@ -135,19 +138,5 @@ public class Main {
 
     public static boolean compare(Cost o1, Cost o2) {
         return o1.w > o2.w || (o1.w == o2.w && o1.time > o2.time);
-    }
-
-    public static boolean check(int start, int to, long price, long time) {
-        for (int i = graph[start].size() - 1; i >= 0; i--) {  // 뒤에서부터 순회
-            HashMap<Integer, Pair> map = graph[start].get(i);
-            if (map.containsKey(to)) {
-                Pair temp = map.get(to);
-                if (temp.w < price || (temp.w == price && temp.time < time)) {
-                    return false;  // 더 빠르거나 저렴한 경로가 있으면 추가하지 않음
-                }
-                graph[start].remove(i);  // 기존 경로 삭제
-            }
-        }
-        return true;
     }
 }
