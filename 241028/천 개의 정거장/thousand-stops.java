@@ -82,7 +82,7 @@ public class Main {
     }
 
     public static void updateGraph(int start, int to, long price, long time, int bus) {
-        if (!graph[start].containsKey(to) || graph[start].get(to).w > price) {
+        if (!graph[start].containsKey(to) || graph[start].get(to).w > price || (graph[start].get(to).w == price && graph[start].get(to).time > time)) {
             graph[start].put(to, new Pair(to, price, bus, (int) time));
         }
     }
