@@ -113,9 +113,8 @@ public class Main {
                 int nextBus = temp.bus;
                 long newW = w;
                 long newTime = time + temp.time;
-                if(bus!=nextBus){
-                    newW+=temp.w;
-                }
+                newW+=temp.w;
+                
                 Cost newCost = new Cost(newW,newTime);
                 if(compare(dist[next],newCost)){
                     dist[next] = newCost;
