@@ -6,8 +6,8 @@ import java.io.*;
 public class Main {
     static class Node{
         int to;
-        int w;
-        public Node(int to, int w){
+        long w;
+        public Node(int to, long w){
             this.to = to;
             this.w = w;
         }
@@ -15,9 +15,9 @@ public class Main {
 
     static class Edge{
         int to;
-        int w;
+        long w;
 
-        public Edge(int to, int w){
+        public Edge(int to, long w){
             this.to = to;
             this.w = w;
         }
@@ -25,9 +25,9 @@ public class Main {
 
     static int N,M;
     static int S,E;
-    static int INF = Integer.MAX_VALUE;
+    static long INF = Long.MAX_VALUE;
     static ArrayList<Node>[] graph;
-    static int minD = Integer.MAX_VALUE;
+    static long minD = Long.MAX_VALUE;
 
 
     public static void main(String[] args) throws IOException {
@@ -51,19 +51,19 @@ public class Main {
             st = new StringTokenizer(br.readLine());
             int s1 = Integer.parseInt(st.nextToken());
             int s2 = Integer.parseInt(st.nextToken());
-            int w = Integer.parseInt(st.nextToken());
+            long w = Long.parseLong(st.nextToken());
 
             graph[s1].add(new Node(s2,w));
             graph[s2].add(new Node(s1,w));
         }
 
 
-        int[] resultS = dijk(S);
-        int[] resultE = dijk(E);
+        long[] resultS = dijk(S);
+        long[] resultE = dijk(E);
 
         for(int i=1; i<=N; i++){
             if(i==S || i==E) continue;
-            int calD = resultS[i]+ resultE[i] + resultS[E];
+            long calD = resultS[i]+ resultE[i] + resultS[E];
             minD = Math.min(minD,calD);
         }
 
@@ -74,8 +74,8 @@ public class Main {
     }
 
 
-    public static int[] dijk(int start){
-        int[] dist = new int[N+1];
+    public static long[] dijk(int start){
+        long[] dist = new long[N+1];
 
 
         Arrays.fill(dist,INF);
@@ -83,17 +83,17 @@ public class Main {
 
         dist[start] = 0;
 
-        PriorityQueue<Edge> pq = new PriorityQueue<>((o1,o2)-> o1.w-o2.w);
+        PriorityQueue<Edge> pq = new PriorityQueue<>((o1,o2)-> Long.compare(o1.w,o2.w));
         pq.add(new Edge(start, 0));
 
         while(!pq.isEmpty()){
             Edge curr = pq.poll();
             int now = curr.to;
-            int w = curr.w;
+            long w = curr.w;
             if(dist[now]<w) continue;
             for(Node temp : graph[now]){
                 int next = temp.to;
-                int newW = w + temp.w;
+                long newW = w + temp.w;
                 if(dist[next]>newW){
                     dist[next] = newW;
                     pq.add(new Edge(next,newW));
