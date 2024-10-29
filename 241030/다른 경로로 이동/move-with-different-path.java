@@ -20,6 +20,7 @@ public class Main {
             this.w = w;
         }
 
+        @Override
         public int compareTo(Edge o){
             if(this.w == o.w){
                 return this.to-o.to;
@@ -104,7 +105,7 @@ public class Main {
                 int next = temp.to;
                 int newW = w + temp.w;
 
-                if(dist[next]>newW){
+                if (dist[next] > newW || (dist[next] == newW && now < beforeNode[next])) {
                     dist[next] = newW;
                     pq.add(new Edge(next,newW));
                     beforeNode[next] = now;
