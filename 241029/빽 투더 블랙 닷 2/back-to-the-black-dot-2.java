@@ -16,14 +16,10 @@ public class Main {
     static class Edge{
         int to;
         int w;
-        int cnt;
-        boolean SC,EC;
-        public Edge(int to, int w, int cnt, boolean SC, boolean EC){
+
+        public Edge(int to, int w){
             this.to = to;
             this.w = w;
-            this.cnt = cnt;
-            this.SC = SC;
-            this.EC = EC;
         }
     }
 
@@ -31,7 +27,6 @@ public class Main {
     static int S,E;
     static int INF = Integer.MAX_VALUE;
     static ArrayList<Node>[] graph;
-    static int[][] dist;
     static int minD = Integer.MAX_VALUE;
 
 
@@ -43,7 +38,6 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         graph = new ArrayList[N+1];
-        dist = new int[3][N+1];
         for(int i=1; i<=N; i++){
             graph[i] = new ArrayList<>();
         }
@@ -63,69 +57,51 @@ public class Main {
             graph[s2].add(new Node(s1,w));
         }
 
+
+        int[] resultS = dijk(S);
+        int[] resultE = dijk(E);
+
         for(int i=1; i<=N; i++){
             if(i==S || i==E) continue;
-            int result = dijk(i);
-            if(result != -1){
-                minD = Math.min(minD,result);
-            }
+            int calD = resultS[i]+ resultE[i] + resultS[E];
+            minD = Math.min(minD,calD);
         }
 
-        System.out.print((minD==INF) ? -1 : minD );
+
+        System.out.print(minD);
 
 
     }
 
 
-    public static int dijk(int start){
+    public static int[] dijk(int start){
+        int[] dist = new int[N+1];
 
 
-        for(int i=0; i<3; i++){
-            Arrays.fill(dist[i],INF);
-        }
+        Arrays.fill(dist,INF);
+  
 
-        dist[0][start] = 0;
+        dist[start] = 0;
 
         PriorityQueue<Edge> pq = new PriorityQueue<>((o1,o2)-> o1.w-o2.w);
-        pq.add(new Edge(start, 0 , 0, false, false));
+        pq.add(new Edge(start, 0));
 
         while(!pq.isEmpty()){
             Edge curr = pq.poll();
             int now = curr.to;
             int w = curr.w;
-            int cnt = curr.cnt;
-
-            if(cnt==2 && now==start){
-                return w;
-            }
-
-
-            if(dist[cnt][now]<w) continue;
-
+            if(dist[now]<w) continue;
             for(Node temp : graph[now]){
                 int next = temp.to;
                 int newW = w + temp.w;
-                int newCnt = cnt;
-                boolean sc = curr.SC;
-                boolean ec = curr.EC;
-                if(next == S && !sc) {
-                    newCnt++;
-                    sc = true;
-                }
-                if(next == E && !ec) {
-                    newCnt++;
-                    ec = true;
-                }
-
-
-                if(dist[newCnt][next]>newW){
-                    dist[newCnt][next] = newW;
-                    pq.add(new Edge(next,newW,newCnt,sc,ec));
+                if(dist[next]>newW){
+                    dist[next] = newW;
+                    pq.add(new Edge(next,newW));
                 }
             }
         }
 
-        return -1;
+        return dist;
         
 
     }
