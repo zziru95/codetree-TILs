@@ -94,7 +94,7 @@ public class Main {
             if(dist[now]<w) continue;
 
             for(int next : graph.get(now).keySet()){
-                int newW = graph.get(now).get(next);
+                int newW = graph.get(now).get(next) + w;
                 if(dist[next]> newW){
                     dist[next] = newW;
                     pq.add(new Edge(next, newW));
