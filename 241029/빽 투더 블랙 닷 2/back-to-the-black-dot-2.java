@@ -63,6 +63,7 @@ public class Main {
 
         for(int i=1; i<=N; i++){
             if(i==S || i==E) continue;
+            if(resultE[i] == INF || resultS[i] == INF) continue;
             long calD = resultS[i]+ resultE[i] + resultS[E];
             minD = Math.min(minD,calD);
         }
