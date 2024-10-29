@@ -69,7 +69,7 @@ public class Main {
         }
 
 
-        System.out.print(minD);
+        System.out.print((minD==INF)? -1: minD);
 
 
     }
