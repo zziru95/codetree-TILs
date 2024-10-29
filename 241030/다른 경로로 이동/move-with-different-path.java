@@ -110,7 +110,7 @@ public class Main {
                 int next = temp.to;
                 int newW = w + temp.w;
 
-                if (dist[next] > newW || (dist[next] == newW && now > beforeNode[next])) {
+                if (dist[next] > newW ) {
                     dist[next] = newW;
                     pq.add(new Edge(next,newW));
                     beforeNode[next] = now;
