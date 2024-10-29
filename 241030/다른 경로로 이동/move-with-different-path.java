@@ -16,6 +16,7 @@ public class Main {
         int to;
         int w;
         public Edge(int to, int w){
+ 
             this.to =to;
             this.w = w;
         }
@@ -62,17 +63,18 @@ public class Main {
             graph[s].add(new Node(e,w));
             graph[e].add(new Node(s,w));
         }
-
+        // for(int i=1; i<=n;i++){
+        //     Collections.sort(graph[i]);
+        // }
         ArrayList<Integer> path = new ArrayList();
-        int result = dijk();
-        int currentNode = n;
-        while(currentNode !=1){
+        int result = dijk(n,1);
+        int currentNode = 1;
+        while(currentNode !=n){
             path.add(currentNode);
             currentNode = beforeNode[currentNode];
         }
-        path.add(1);
+        path.add(n);
 
-        // Collections.reverse(path);
         // for(int a: path){
         //     System.out.print(a + " ");
         // }
@@ -87,30 +89,30 @@ public class Main {
             graph[end].removeIf(node -> node.to == start);
         }
         
-        System.out.print(dijk());
+        System.out.print(dijk(1,n));
 
     }
 
 
-    public static int dijk(){
+    public static int dijk(int start, int end){
         Arrays.fill(dist,INF);
         Arrays.fill(beforeNode,-1);
-        dist[1] = 0;
+        dist[start] = 0;
         PriorityQueue<Edge> pq = new PriorityQueue<>();
-        pq.add(new Edge(1,0));
+        pq.add(new Edge(start,0));
         while(!pq.isEmpty()){
             Edge curr = pq.poll();
             int now = curr.to;
             int w = curr.w;
             
-            if(now == n) return w;
+            if(now == end) return w;
             if(dist[now]<w) continue;
 
             for(Node temp : graph[now]){
                 int next = temp.to;
                 int newW = w + temp.w;
 
-                if (dist[next] > newW ) {
+                if (dist[next] > newW || (dist[next] == newW && now < beforeNode[next])) {
                     dist[next] = newW;
                     pq.add(new Edge(next,newW));
                     beforeNode[next] = now;
