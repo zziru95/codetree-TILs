@@ -72,6 +72,11 @@ public class Main {
         }
         path.add(1);
 
+        // Collections.reverse(path);
+        // for(int a: path){
+        //     System.out.print(a + " ");
+        // }
+
         for (int i = path.size() - 1; i > 0; i--) {
             int start = path.get(i);
             int end = path.get(i - 1);
@@ -105,7 +110,7 @@ public class Main {
                 int next = temp.to;
                 int newW = w + temp.w;
 
-                if (dist[next] > newW || (dist[next] == newW && now < beforeNode[next])) {
+                if (dist[next] > newW || (dist[next] == newW && now > beforeNode[next])) {
                     dist[next] = newW;
                     pq.add(new Edge(next,newW));
                     beforeNode[next] = now;
