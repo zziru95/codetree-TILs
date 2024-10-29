@@ -4,13 +4,16 @@ import java.io.*;
 
 public class Main {
 
-    static class Edge{
+    static class Edge implements Comparable<Edge>{
         int to;
         int w;
         public Edge(int to, int w){
             this.to = to;
             this.w = w;
+        }
 
+        public int compareTo(Edge o){
+            return this.w-o.w;
         }
     }
 
@@ -81,7 +84,7 @@ public class Main {
         Arrays.fill(before,-1);
         dist[start] = 0;
         before[start] = start;
-        PriorityQueue<Edge> pq = new PriorityQueue<>((o1,o2)-> o1.w-o2.w);
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
 
         pq.add(new Edge(start,0));
 
