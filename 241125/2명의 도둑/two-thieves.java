@@ -5,6 +5,8 @@ public class Main {
     static int N,M,C;
     static int[][] graph;
     static int maxV = 0;
+    static int[] get;
+    static int maxVal;
 
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
@@ -16,6 +18,7 @@ public class Main {
         C = Integer.parseInt(st.nextToken());
 
         graph = new int[N][N];
+        get = new int[M];
 
         for(int i=0; i<N; i++){
             st = new StringTokenizer(br.readLine());
@@ -29,7 +32,7 @@ public class Main {
                 for(int n=i; n<N; n++){
                     for(int m=0; m<N; m++){
                         if(i==n && m<j+M) continue;
-                        find(i,j,n,m);
+                        maxV = Math.max(maxV,(find(i,j) + find(n,m)));
                     }
                 }
             }
@@ -39,37 +42,36 @@ public class Main {
     }
 
 
-    public static void find(int r1, int c1, int r2, int c2){
+    public static int find(int r, int c){
         int v = 0;
 
         int w1 = 0;
-        for(int i=c1; i<c1+M; i++){
-            if(!valid(r1,i)) break;
+        int idx = 0;
+        for(int i=c; i<c+M; i++){
+            if(!valid(r,i)) break;
             
-            int w = graph[r1][i];
-            
-            if(C<w+w1) break;
-
-            w1 += w;
-            v += w*w;
+            get[idx] = graph[r][i];
+            idx++;
         }
 
-        int w2 = 0;
-        for(int i=c2; i<c2+M; i++){
-            if(!valid(r2,i)) break;
-
-            int w = graph[r2][i];
-
-            if(C<w+w2) break;
-
-            w2 += w;
-            v += w*w;
-
-        }
-
-
-        maxV = Math.max(v,maxV);
+        maxVal = 0;
+        findMaxSum(0,0,0);
+        return maxVal;
     }
+    
+    public static void findMaxSum (int idx, int w, int v){
+        if(w>C) return;
+
+        if(idx ==M) {
+            maxVal = Math.max(maxVal, v);
+            return;
+        }
+
+        findMaxSum(idx+1, w,v);
+        findMaxSum(idx+1, w+get[idx],v+ (get[idx] * get[idx]));
+    }
+
+
 
     public static boolean valid(int r, int c){
         return 0<=r && r<N && 0<=c && c<N;
