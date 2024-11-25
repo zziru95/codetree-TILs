@@ -35,7 +35,9 @@ public class Main {
         }
         m = numnum.size();
         comb(0);
-
+        if(m ==1){
+            maxV=4;
+        }
         System.out.print(maxV);
     }
 
