@@ -30,7 +30,7 @@ public class Main {
         }
         n = orders.length;
         nums = new int[6];
-        Arrays.fill(nums, 1); // 여기에서 nums 배열을 1로 초기화합니다.
+        Arrays.fill(nums, 1); // nums 배열을 1로 초기화
         for(char c: set){
             numnum.add((int) c -'a');
         }
@@ -50,10 +50,16 @@ public class Main {
             return;
         }
 
-        nums[numnum.get(idx)]= 1;
+        int pos = numnum.get(idx);
+        int originalValue = nums[pos]; // 이전 값 저장
+
+        nums[pos]= 1;
         comb(idx+1);
-        nums[numnum.get(idx)]= 4;
+
+        nums[pos]= 4;
         comb(idx+1);
+
+        nums[pos] = originalValue; // 이전 값 복원
 
     }
 
