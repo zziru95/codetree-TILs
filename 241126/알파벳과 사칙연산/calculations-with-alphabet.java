@@ -30,13 +30,15 @@ public class Main {
         }
         n = orders.length;
         nums = new int[6];
+        Arrays.fill(nums, 1); // 여기에서 nums 배열을 1로 초기화합니다.
         for(char c: set){
             numnum.add((int) c -'a');
         }
         m = numnum.size();
-        comb(0);
         if(temp.length() ==1){
             maxV=4;
+        } else {
+            comb(0);
         }
         System.out.print(maxV);
     }
@@ -56,7 +58,6 @@ public class Main {
     }
 
 
-//b-a*b-c+b
     public static void cal(){
         int idx = 0;
         int start = nums[(int) alphas[0] -'a'];
