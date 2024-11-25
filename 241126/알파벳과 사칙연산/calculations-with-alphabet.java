@@ -54,13 +54,13 @@ public class Main {
     }
 
 
-
+//b-a*b-c+b
     public static void cal(){
         int idx = 0;
-        int start = nums[(int) alphas[numnum.get(0)] -'a'];
+        int start = nums[(int) alphas[0] -'a'];
         int idx2 = 1;
-        char alpha = alphas[idx2];
         while(idx<n){
+            char alpha = alphas[idx2];
             if(orders[idx] == '+'){
                 start += nums[(int) alpha -'a'];
             } else if(orders[idx]== '-'){
@@ -73,9 +73,6 @@ public class Main {
         }
 
         maxV = Math.max(maxV,start);
-        if(maxV ==2){
-            return;
-        }
 
     }
 }
