@@ -47,6 +47,7 @@ public class Main {
 
         int w1 = 0;
         int idx = 0;
+        Arrays.fill(get,0);
         for(int i=c; i<c+M; i++){
             if(!valid(r,i)) break;
             
@@ -68,7 +69,7 @@ public class Main {
         }
 
         findMaxSum(idx+1, w,v);
-        findMaxSum(idx+1, w+get[idx],v+ (get[idx] * get[idx]));
+        findMaxSum(idx+1, w+get[idx], v+ (get[idx] * get[idx]));
     }
 
 
