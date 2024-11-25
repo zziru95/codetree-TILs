@@ -53,14 +53,10 @@ public class Main {
         int pos = numnum.get(idx);
         int originalValue = nums[pos]; // 이전 값 저장
 
-        nums[pos]= 1;
-        comb(idx+1);
-
-        nums[pos]= 4;
-        comb(idx+1);
-
-        nums[pos] = originalValue; // 이전 값 복원
-
+        for(int i=1; i<5; i++){
+            nums[pos] = i;
+            comb(idx+1);
+        }
     }
 
 
