@@ -19,9 +19,8 @@ public class Main {
             }
         }
         n = orders.length;
-        for(int i=1; i<5; i++){
-            findMax(0,i);
-        }
+            
+        findMax(0,4);
 
         System.out.print(maxV);
     }
@@ -32,14 +31,19 @@ public class Main {
             return;
         }
 
-        for(int i=1;i<5; i++){
-            if(orders[idx] == '+'){
-                findMax(idx+1, i+result);
-            } else if(orders[idx]== '-'){
-                findMax(idx+1, result-i);
-            } else if(orders[idx]=='*'){
-                findMax(idx+1, result*i);
+    
+        if(orders[idx] == '+'){
+            findMax(idx+1, 4+result);
+        } else if(orders[idx]== '-'){
+            findMax(idx+1, result-1);
+        } else if(orders[idx]=='*'){
+            if(result>0){
+                findMax(idx+1, result*4);
+            } else{
+                findMax(idx+1, result*1);
             }
+            
         }
+        
     }
 }
