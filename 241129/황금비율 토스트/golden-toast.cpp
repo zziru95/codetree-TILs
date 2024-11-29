@@ -35,7 +35,7 @@ int main() {
         }
         else if (cmd == "D")
         {
-            if (!(toast.empty()))
+            if (it != toast.end())
             {
                 it = toast.erase(it);
             }
