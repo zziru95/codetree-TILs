@@ -30,7 +30,7 @@ int main() {
     int i = 0;
     double total_value = 0.0;
     double remaining_weight = M;
-    while (i < N || remaining_weight != 0)
+    while (i < N && remaining_weight > 0)
     {
         if (jewels[i].weight <= remaining_weight)
         {
