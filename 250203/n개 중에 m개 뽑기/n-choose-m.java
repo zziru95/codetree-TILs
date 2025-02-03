@@ -24,7 +24,7 @@ public class Main {
             for(int a : comb){
                 sb.append(a).append(" ");
             }
-            sb.deleteCharAt(sb.length()-1);
+            // sb.deleteCharAt(sb.length()-1);
             sb.append('\n');
             return;
         }
