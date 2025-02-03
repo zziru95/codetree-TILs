@@ -34,6 +34,8 @@ public class Main {
             int idx = curr[0];
             int t = curr[1];
 
+            if(idx == n-1) return;
+
             
             int possible = jump[idx];
 
