@@ -37,7 +37,7 @@ public class Main {
 
         int minCost =INF;
         for(int next = 0; next < n ; next++){
-            if((visited & (1<<next)) == 0 && distance[current][next] > 0){
+            if((visited & (1<<next)) == 0 && distance[current][next] != 0){
                 int newVisited = visited | (1<<next);
                 int cost = distance[current][next] + tsp(next,newVisited);
                 minCost = Math.min(minCost,cost);
