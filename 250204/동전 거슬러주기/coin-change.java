@@ -16,6 +16,7 @@ public class Main {
         }
         
         for(int a : kind){
+            if(a> M) continue;
             dp[a] = 1;
         }
 
