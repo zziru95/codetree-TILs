@@ -20,6 +20,7 @@ public class Main {
         }
         // reverse(kind);
         for(int a: kind){
+            if(a>M) continue;
             dp[a] = 1;
         }
 
