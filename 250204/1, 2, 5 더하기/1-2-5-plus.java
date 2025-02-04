@@ -11,13 +11,12 @@ public class Main {
         dp[1] = 1;
         dp[2] = 2;
 
-        for(int a : b){
-            for(int i=3; i<=n; i++){
-                dp[i] = dp[i-1] + dp[i-2];
-                if(i>=5) dp[i] += dp[i-5];
-                dp[i] %= 10007;  
-            }
+        for(int i=3; i<=n; i++){
+            dp[i] = dp[i-1] + dp[i-2];
+            if(i>=5) dp[i] += dp[i-5];
+            dp[i] %= 10007;  
         }
+        
         
         System.out.print(dp[n]);
 
