@@ -27,7 +27,7 @@ public class Main {
                     dp[j+now] = min;
                 }
             }
-            dp[now] = 1;
+            if(now <= m) dp[now] = 1;
         }
         
         
