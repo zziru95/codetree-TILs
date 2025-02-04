@@ -5,7 +5,6 @@ import java.io.*;
 public class Main {
     static int n;
     static int[][] arr;
-    static ArrayList<Integer> comb;
     static boolean[] visited;
     static int answer = Integer.MIN_VALUE;
     public static void main(String[] args) throws IOException {
@@ -15,7 +14,6 @@ public class Main {
 
         n = Integer.parseInt(st.nextToken());
         arr = new int[n][n];
-        comb = new ArrayList<>();
         visited = new boolean[n];
 
         for(int i=0; i<n; i++){
@@ -34,7 +32,7 @@ public class Main {
 
 
     public static void comb(int idx, int min){
-        if (comb.size() == n){
+        if (idx == n){
             answer = Math.max(answer,min);
             return;
         }
@@ -43,10 +41,8 @@ public class Main {
             if(!visited[i]){
                 visited[i] = true;
                 int temp = arr[i][idx];
-                comb.add(i);
                 comb(idx+1, Math.min(min,temp));
                 visited[i] = false;
-                comb.remove(comb.size()-1);
             }
         }
     }
