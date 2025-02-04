@@ -8,7 +8,7 @@ public class Main {
         memo[1]=  1;
         memo[2] = 1;
         for(int i=3; i<=N; i++){
-            memo[i] = memo[i-1] +memo[i-2];
+            memo[i] = memo[i-1] + memo[i-2];
         }
 
         System.out.print(memo[N]);
