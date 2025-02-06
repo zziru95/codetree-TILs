@@ -1,76 +1,58 @@
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-    public static final int INT_MIN = Integer.MIN_VALUE;
-    public static final int OFFSET = 100000;
-    public static final int MAX_M = 100000;
-    public static final int MAX_N = 100;
-    
-    // 변수 선언
-    public static int n, m;
-    public static int[] arr = new int[MAX_N + 1];
-    
-    // dp[i][j] : i번째 수까지 고려헀을 떄
-    //            그룹 A 합 - 그룹 B 합을 j라 했을 때
-    //            만들 수 있는 최대 그룹 A의 합
-    public static int[][] dp = new int[MAX_N + 1][MAX_M + 1 + OFFSET];
-    
-    public static void initialize() {
-        // 최대를 구하는 문제이므로
-        // 초기값을 INT_MIN으로 넣어줍니다.
-        for(int i = 0; i <= n; i++)
-            for(int j = -m; j <= m; j++)
-                dp[i][j + OFFSET] = INT_MIN;
-    
-        // 초기 조건은
-        // 아직 아무런 수도 고른적이 없는 경우이므로 
-        // 0번째 수까지 고려하여
-        // 그룹 A 합 - 그룹 B 합이 0이고 
-        // 그룹 A의 합이 0인 경우에 대한 정보 입니다.
-        dp[0][0 + OFFSET] = 0;
-    }
-    
-    public static void update(int i, int j, int prevI, int prevJ, int val) {
-        // 불가능한 경우 패스합니다.
-        if(prevJ < -m || prevJ > m || dp[prevI][prevJ + OFFSET] == INT_MIN)
-            return;
-        
-        dp[i][j + OFFSET] = Math.max(dp[i][j + OFFSET], dp[prevI][prevJ + OFFSET] + val);
-    }
+    static final int OFFSET = 100000; // sumA - sumB의 범위를 보정하기 위한 오프셋
+    static final int MN = Integer.MIN_VALUE; // 초기 최소값 설정
+    static int n, total;
+    static int[] arr;
+    static int[][] dp; // DP 배열: dp[i][j] → i번째까지 고려했을 때 sumA - sumB = j의 최대 sumA 값
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        // 입력:
-        n = sc.nextInt();
-        for(int i = 1; i <= n; i++)
-            arr[i] = sc.nextInt();
-        
-        // 만들 수 있는 최대 합을 계산합니다.
-        for(int i = 1; i <= n; i++)
-            m += arr[i];
-        
-        initialize();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        // 점화식에 따라 값을 채워줍니다.
-        for(int i = 1; i <= n; i++) {
-            for(int j = -m; j <= m; j++) {
-                // Case 1. 그룹 A에 i번째 원소를 추가하여 그룹A-그룹B가 j가 된 경우
-                //         dp[i - 1][j - arr[i]] + arr[i] -> dp[i][j]
-                update(i, j, i - 1, j - arr[i], arr[i]);
+        // 입력 처리
+        n = Integer.parseInt(st.nextToken());
+        arr = new int[n + 1];
+        st = new StringTokenizer(br.readLine());
+        for (int i = 1; i <= n; i++) {
+            arr[i] = Integer.parseInt(st.nextToken());
+            total += arr[i];
+        }
 
-                // Case 2. 그룹 B에 i번째 원소를 추가하여 그룹A-그룹B가 j가 된 경우
-                //         dp[i - 1][j + arr[i]] -> dp[i][j]
-                update(i, j, i - 1, j + arr[i], 0);
+        dp = new int[2][2 * total + 1]; // 2D DP 대신 2줄만 유지하여 메모리 절약
+        for (int i = 0; i < 2; i++) Arrays.fill(dp[i], MN);
+        dp[0][total] = 0; // sumA - sumB = 0 (초기 상태)
 
-                // Case 3. 그룹 C에 i번째 원소를 추가하여 그룹A-그룹B가 j가 된 경우
-                //         dp[i - 1][j] -> dp[i][j]
-                update(i, j, i  - 1, j, 0);
+        // DP 진행
+        for (int i = 1; i <= n; i++) {
+            int num = arr[i];
+            for (int diff = -total; diff <= total; diff++) {
+                if (dp[(i - 1) % 2][diff + total] == MN) continue; // 이전 상태가 불가능하면 무시
+
+                // 1. A에 추가 (sumA + num)
+                dp[i % 2][diff + num + total] = Math.max(
+                    dp[i % 2][diff + num + total],
+                    dp[(i - 1) % 2][diff + total] + num
+                );
+
+                // 2. B에 추가 (sumB + num)
+                dp[i % 2][diff - num + total] = Math.max(
+                    dp[i % 2][diff - num + total],
+                    dp[(i - 1) % 2][diff + total]
+                );
+
+                // 3. C에 추가 (아무 그룹에도 넣지 않음)
+                dp[i % 2][diff + total] = Math.max(
+                    dp[i % 2][diff + total],
+                    dp[(i - 1) % 2][diff + total]
+                );
             }
         }
 
-        // n개의 수를 고려하여
-        // 그룹A-그룹B가 0이 된 경우 중
-        // 가능한 그룹A 합의 최대값이 답이 됩니다.
-        System.out.print(dp[n][0 + OFFSET]);
+        // 최적 해 찾기 (sumA - sumB = 0이 되는 경우 중 최대 sumA)
+        int maxEqualSum = dp[n % 2][total] == MN ? 0 : dp[n % 2][total];
+        System.out.println(maxEqualSum);
     }
 }
