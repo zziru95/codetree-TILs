@@ -32,9 +32,9 @@ public class Main {
             }
         }
         int answer = Math.max(dp[N][0],dp[N][1]);
-        answer = Math.max(answer,dp[N][2]);
+        answer = Mathm.max(answer,Math.max(dp[N][3],dp[N][2]));
         
-        System.out.print(dp[N][3]);
+        System.out.print(answer);
                                        
     }
 }
