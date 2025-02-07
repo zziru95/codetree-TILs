@@ -12,7 +12,7 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         arr = new int[N+1];
         //dp[현재층수][1번오른 횟수]
-        dp = new int[N+1][3];
+        dp = new int[N+1][4];
         st = new StringTokenizer(br.readLine());
         for(int i=1; i<=N; i++){
             arr[i] = Integer.parseInt(st.nextToken());
