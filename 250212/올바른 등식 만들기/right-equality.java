@@ -23,7 +23,7 @@ public class Main {
 
 
         dp[1][arr[1] + 20] += 1; 
-        if (arr[1] != 0) dp[1][20 - arr[1]] += 1;
+        dp[1][20 - arr[1]] += 1;
         
         for(int i=2; i<=N; i++){
             for(int j=0; j<=41; j++){
