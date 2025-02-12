@@ -4,7 +4,7 @@ import java.io.*;
 public class Main {
     static int N,M;
     static int[] arr;
-    static int[][] dp;
+    static long[][] dp;
 
     public static void main(String[] args) throws IOException {
         // Please write your code here.
@@ -19,7 +19,7 @@ public class Main {
         for(int i=1; i<=N; i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
-        dp = new int[N+1][42];
+        dp = new long[N+1][42];
 
 
         dp[1][arr[1] + 20] += 1; 
